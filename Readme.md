@@ -1,9 +1,10 @@
 
 # segmentio-integration
 
-  Segment.io integration base prototype
+  Segment.io integration base prototype.
 
-## License 
+
+## License
 
 (The MIT License)
 
