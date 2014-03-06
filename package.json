@@ -9,12 +9,15 @@
     "url": "git://github.com/segmentio/segmentio-integration.git"
   },
   "dependencies": {
-    "debug": "~0.7.2",
-    "is": "~0.2.6"
+    "debug": "~0.7.4",
+    "superagent": "~0.16.0",
+    "slug-component": "~1.1.0",
+    "superagent-retry": "~0.2.0",
+    "methods": "~0.1.0"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "*"
+    "mocha": "~1.17.1",
+    "segmentio-facade": "~0.2.9"
   },
-  "main": "lib/index"
+  "main": "lib/integration"
 }
