@@ -1,4 +1,9 @@
 
+1.0.1 / 2014-03-11
+==================
+
+ * fixing ensure error message to include integration
+
 1.0.0 / 2014-03-06
 ==================
 
