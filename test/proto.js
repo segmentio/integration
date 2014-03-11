@@ -54,7 +54,7 @@ describe('proto', function(){
     it('should return validation error if value is empty', function(){
       var err = segment.ensure('', 'userId');
       assert(err instanceof errors.Validation);
-      assert('"Test" integration requires "userId"');
+      assert(err.message == '"Segment.io" integration requires "userId"');
     })
   })
 
