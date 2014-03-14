@@ -1,4 +1,5 @@
 
+var helpers = require('./support');
 var integration = require('..');
 var assert = require('assert');
 var http = require('http');
@@ -53,6 +54,49 @@ describe('statics', function(){
       var test = integration('segment');
       test.mapper(mapper);
       assert(mapper == test().mapper);
+    })
+  })
+
+  describe('.client()', function(){
+    it('should be enabled on client too', function(){
+      var test = integration('test').client()();
+      var t = helpers.track({ channel: 'client' });
+      assert(test.enabled(t, {}));
+    })
+
+    it('should not be enabled on mobile', function(){
+      var test = integration('test').client()();
+      var t = helpers.track({ channel: 'mobile' });
+      assert(!test.enabled(t, {}));
+    })
+  })
+
+  describe('.client() && .mobile()', function(){
+    it('should be enabled on both', function(){
+      var test = integration('test');
+      var a = helpers.track({ channel: 'client' });
+      var b = helpers.track({ channel: 'mobile' });
+      test.client();
+      test.mobile();
+      test = test();
+      assert(test.enabled(a, {}));
+      assert(test.enabled(b, {}));
+    })
+  })
+
+  describe('.channel(chan)', function(){
+    it('should push to prototype.channels', function(){
+      var test = integration('test');
+      test.channel('baz');
+      assert(~test.prototype.channels.indexOf('baz'));
+    })
+
+    it('should not push a channel if it exists', function(){
+      var test = integration('test');
+      var length = test.prototype.channels.length;
+      test.channel('b');
+      test.channel('b');
+      assert(length + 1 == test.prototype.channels.length);
     })
   })
 })
