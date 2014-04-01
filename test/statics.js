@@ -36,10 +36,10 @@ describe('statics', function(){
     })
 
     it('should retry', function(done){
-      var test = integration('test');
       var port = server.address().port;
-      test.endpoint('http://localhost:' + port);
-      test.retries(5);
+      var test = integration('test')
+        .endpoint('http://localhost:' + port)
+        .retries(5);
       var req = test().request();
       req.end(function(err, res){
         assert(4 == requests);
@@ -99,4 +99,45 @@ describe('statics', function(){
       assert(length + 1 == test.prototype.channels.length);
     })
   })
+
+  describe('.timeout(timeout)', function(){
+    var server;
+    before(function(done){
+      server = http.createServer(respond);
+      server.listen(done);
+      function respond(req, res){
+        setTimeout(function(){
+          res.writeHead(200);
+          res.end();
+        }, 100);
+      }
+    });
+
+    after(function(){
+      server.close();
+    });
+
+    it('should have a default timeout', function(){
+      var test = integration('test');
+      assert(test.prototype.timeout === 10000);
+    });
+
+    it('should be able to set a new timeout', function(){
+      var test = integration('test')
+        .timeout(10);
+      assert(test.prototype.timeout === 10);
+    });
+
+    it('should set timeouts on the request', function(done){
+      var port = server.address().port;
+      var test = integration('test')
+        .timeout(10)
+        .endpoint('http://localhost:' + port);
+      var req = test().request();
+      req.end(function(err, res){
+        assert(err && err.timeout);
+        done();
+      });
+    });
+  });
 })
