@@ -1,4 +1,10 @@
 
+1.0.2 / 2014-04-01
+==================
+
+ * adding a .timeout() static and a default timeout of 10s
+ * add shortcuts for .enabled(), closes #7
+
 1.0.1 / 2014-03-11
 ==================
 
