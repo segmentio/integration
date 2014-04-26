@@ -17,6 +17,52 @@ describe('proto', function(){
       .mapper({})();
   })
 
+  describe('#events', function(){
+    describe('when options.events is an object', function(){
+      it('should return an empty array on mismatch', function(){
+        var events = { a: '4be41523', b: 'd49ccea' };
+        assert.deepEqual([], segment.events(events, 'c'));
+      })
+
+      it('should return an array with the value on match', function(){
+        var events = { a: '48dc32b2', b: '48dc32b2' };
+        assert.deepEqual(['48dc32b2'], segment.events(events, 'b'));
+      })
+
+      it('should use to-no-case to match keys', function(){
+        var events = { 'My Event': '7b4fe803', 'other event': '2107007a' };
+        assert.deepEqual(['7b4fe803'], segment.events(events, 'my_event'));
+      })
+    })
+
+    describe('when .options.events is an array', function(){
+      it('should return an empty array if the array isnt a map', function(){
+        var events = ['one', 'two'];
+        assert.deepEqual([], segment.events(events, 'one'));
+      })
+
+      it('should return an empty array when the array is empty', function(){
+        var events = [];
+        assert.deepEqual([], segment.events(events, 'wee'));
+      })
+
+      it('should return an empty array on mismatch', function(){
+        var events = [{ key: 'my event', value: '1121f10f' }];
+        assert.deepEqual([], segment.events(events, 'event'));
+      })
+
+      it('should return all matches in the array', function(){
+        var events = [{ key: 'baz', value: '4cff6219' }, { key: 'baz', value: '4426d54'} ];
+        assert.deepEqual(['4cff6219', '4426d54'], segment.events(events, 'baz'));
+      })
+
+      it('should use to-no-case to match keys', function(){
+        var events = [{ key: 'My Event', value: 'a35bd696' }];
+        assert.deepEqual(['a35bd696'], segment.events(events, 'my_event'));
+      })
+    })
+  })
+
   describe('.enabled(facade, settings)', function(){
     it('should return true for server channel and enabled Segment.io', function(){
       var track = helpers.track({ options: { 'Segment.io': {} } });
