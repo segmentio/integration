@@ -13,8 +13,11 @@
     "superagent": "~0.16.0",
     "slug-component": "~1.1.0",
     "superagent-retry": "~0.2.0",
+    "type": "git://github.com/segmentio/type",
     "methods": "~0.1.0",
-    "ms": "~0.6.2"
+    "ms": "~0.6.2",
+    "to-no-case": "^0.1.2",
+    "uniq-component": "^1.0.0"
   },
   "devDependencies": {
     "mocha": "~1.17.1",
