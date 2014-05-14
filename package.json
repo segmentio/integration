@@ -14,7 +14,7 @@
     "slug-component": "~1.1.0",
     "superagent-retry": "~0.2.0",
     "type": "git://github.com/segmentio/type",
-    "methods": "~0.1.0",
+    "methods": "0.0.1",
     "ms": "~0.6.2",
     "to-no-case": "^0.1.2",
     "uniq-component": "^1.0.0"
