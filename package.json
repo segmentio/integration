@@ -9,6 +9,7 @@
     "url": "git://github.com/segmentio/segmentio-integration.git"
   },
   "dependencies": {
+    "analytics-events": "git+ssh://git@github.com:segmentio/analytics-events",
     "debug": "~0.7.4",
     "superagent": "~0.16.0",
     "slug-component": "~1.1.0",
