@@ -1,5 +1,5 @@
 
-var Track = require('segmentio-facade');
+var Track = require('segmentio-facade').Track;
 
 /**
  * Track

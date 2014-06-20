@@ -186,13 +186,114 @@ describe('proto', function(){
 
   describe('.track(track, settings, fn)', function(){
     it('should do nothing', function(done){
-      segment.track({}, {}, done);
+      var msg = helpers.track();
+      segment.track(msg, {}, done);
     })
 
     it('should map track if mapper.track is defined', function(done){
       var test = integration('test').mapper({ track: mapper() });
       test.prototype.track = mapper.test(done);
-      test().track({}, {}, done);
+      var msg = helpers.track();
+      test().track(msg, {}, done);
+    })
+
+    it('should call .viewedProduct when the event is /viewed[ _]?product/i', function(){
+      var track = helpers.track;
+      segment.viewedProduct = spy();
+      segment.track(track({ event: 'Viewed Product' }));
+      segment.track(track({ event: 'viewed product' }));
+      segment.track(track({ event: 'viewed_product' }));
+      segment.track(track({ event: 'viewedProduct' }));
+      var args = segment.viewedProduct.args;
+      assert.equal(4, args.length);
+      assert.equal('Viewed Product', args[0][0].event());
+      assert.equal('viewed product', args[1][0].event());
+      assert.equal('viewed_product', args[2][0].event());
+      assert.equal('viewedProduct', args[3][0].event());
+    })
+
+    it('should call .addedProduct when the event is /added[ _]?product/i', function(){
+      var track = helpers.track;
+      segment.addedProduct = spy();
+      segment.track(track({ event: 'Added Product' }));
+      segment.track(track({ event: 'added product' }));
+      segment.track(track({ event: 'added_product' }));
+      segment.track(track({ event: 'addedProduct' }));
+      var args = segment.addedProduct.args;
+      assert.equal(4, args.length);
+      assert.equal('Added Product', args[0][0].event());
+      assert.equal('added product', args[1][0].event());
+      assert.equal('added_product', args[2][0].event());
+      assert.equal('addedProduct', args[3][0].event());
+    })
+
+    it('should call .removedProduct when the event is /removed[ _]?product/i', function(){
+      var track = helpers.track;
+      segment.removedProduct = spy();
+      segment.track(track({ event: 'Removed Product' }));
+      segment.track(track({ event: 'removed product' }));
+      segment.track(track({ event: 'removed_product' }));
+      segment.track(track({ event: 'removedProduct' }));
+      var args = segment.removedProduct.args;
+      assert.equal(4, args.length);
+      assert.equal('Removed Product', args[0][0].event());
+      assert.equal('removed product', args[1][0].event());
+      assert.equal('removed_product', args[2][0].event());
+      assert.equal('removedProduct', args[3][0].event());
+    })
+
+    it('should call .completedOrder when the event is /removed[ _]?product/i', function(){
+      var track = helpers.track;
+      segment.completedOrder = spy();
+      segment.track(track({ event: 'Completed Order' }));
+      segment.track(track({ event: 'completed order' }));
+      segment.track(track({ event: 'completed_order' }));
+      segment.track(track({ event: 'completedOrder' }));
+      var args = segment.completedOrder.args;
+      assert.equal(4, args.length);
+      assert.equal('Completed Order', args[0][0].event());
+      assert.equal('completed order', args[1][0].event());
+      assert.equal('completed_order', args[2][0].event());
+      assert.equal('completedOrder', args[3][0].event());
+    })
+
+    it('should not call .track if a method is found', function(){
+      var msg = helpers.track({ event: 'Completed Order' });
+      var Test = integration('test');
+      Test.prototype.track = spy();
+      Test.prototype.completedOrder = spy();
+      var test = Test();
+      test.track(msg);
+      assert.equal(0, Test.prototype.track.args.length);
+      assert.equal(1, Test.prototype.completedOrder.args.length);
+    })
+
+    it('should apply arguments to methods', function(done){
+      var msg = helpers.track({ event: 'Completed Order' });
+      var settings = {};
+      segment.completedOrder = spy();
+      segment.track(msg, settings, done);
+      var args = segment.completedOrder.args[0];
+      assert.deepEqual(args, [msg, settings, done]);
+      done();
+    })
+
+    it('should not error if a method is not implemented and fallback to track', function(){
+      var msg = helpers.track({ event: 'Completed Order' });
+      var Test = integration('test');
+      Test.prototype.track = spy();
+      Test.prototype.completedOrder = null;
+      var test = Test();
+      test.track(msg);
+      assert.equal(1, Test.prototype.track.args.length);
+    })
+
+    it('should return the value', function(){
+      var msg = helpers.track({ event: 'Completed Order' });
+      var Test = integration('test');
+      Test.prototype.completedOrder = function(){ return 1; };
+      var test = Test();
+      assert.equal(1, test.track(msg));
     })
   })
 
@@ -256,3 +357,17 @@ mapper.test = function(done){
     done();
   };
 };
+
+/**
+ * spy
+ */
+
+function spy(){
+  var args = [];
+  push.args = args;
+  return push;
+
+  function push(){
+    push.args.push([].slice.call(arguments));
+  }
+}
