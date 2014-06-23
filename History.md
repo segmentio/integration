@@ -2,6 +2,7 @@
 1.2.0 / 2014-06-23
 ==================
 
+ * pin analytics-events@1.x
  * add make-lint
  * add ecommerce
 
