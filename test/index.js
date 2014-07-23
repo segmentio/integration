@@ -47,5 +47,9 @@ describe('integration', function(){
       Test.prototype.initialize = done;
       new Test;
     })
+
+    it('should expose `name` on .prototype', function(){
+      assert.equal('Test', Test.prototype.name);
+    });
   })
 })
