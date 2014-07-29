@@ -123,16 +123,16 @@ describe('statics', function(){
     });
 
     it('should be able to set a new timeout', function(){
-      var test = integration('test')
-        .timeout(10);
+      var test = integration('test');
+      test.timeout(10);
       assert(test.prototype.timeout === 10);
     });
 
     it('should set timeouts on the request', function(done){
       var port = server.address().port;
-      var test = integration('test')
-        .timeout(10)
-        .endpoint('http://localhost:' + port);
+      var test = integration('test');
+      test.endpoint('http://localhost:' + port)
+      test.timeout(10);
       var req = test().request();
       req.end(function(err, res){
         assert(err && err.timeout);
