@@ -10,8 +10,10 @@ describe('.locked(key, fn)', function(){
   var api;
   var db;
 
-  before(function(){
+  before(function(done){
     db = redis.createClient();
+    db.on('error', done);
+    db.on('ready', done);
   });
 
   beforeEach(function(){
@@ -62,6 +64,7 @@ describe('.locked(key, fn)', function(){
 
   describe('with lock', function(){
     it('should not override the previous event', function(done){
+      this.timeout(5e4);
       var batch = new Batch;
 
       segment.track = withLock;
@@ -86,9 +89,11 @@ describe('.locked(key, fn)', function(){
 
   // track with lock
   function withLock(msg, _, fn){
-    this.locked(msg.userId(), function(err, unlock){
+    var self = this;
+    this.lock(msg.userId(), function(err, unlock){
       if (err) return fn(err);
       db.hget('users', msg.userId(), function(err, value){
+        console.log('hget()');
         if (err) return fn(err);
         if (value) return unlock(fn);
         db.hset('users', msg.userId(), msg.event(), function(err){
