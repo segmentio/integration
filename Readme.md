@@ -1,4 +1,6 @@
 
+[![Build Status](https://travis-ci.org/segmentio/integration.svg?branch=master)](https://travis-ci.org/segmentio/integration)
+
 # segmentio-integration
 
   Segment.io integration base prototype.
