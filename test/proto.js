@@ -156,6 +156,20 @@ describe('proto', function(){
     it('should allow absolute urls', function(){
       assert('http://baz.com' == segment.request('post', 'http://baz.com').url);
     })
+
+    it('should set the user-agent', function(){
+      var req = segment.request('post');
+      var header = req.req._headers;
+      assert.equal('Segment.io/1.0', header['user-agent']);
+    });
+
+    it('should be able to override the default user agent', function(){
+      var req = segment.request('post');
+      var header = req.req._headers;
+      assert.equal('Segment.io/1.0', header['user-agent']);
+      req.set('User-Agent', 'some-agent');
+      assert.equal('some-agent', header['user-agent']);
+    });
   })
 
   methods.forEach(function(method){
