@@ -6,15 +6,31 @@ var methods = require('methods');
 var integration = require('..');
 var errors = integration.errors;
 var assert = require('assert');
+var http = require('http');
 
 describe('proto', function(){
   var segment;
+  var server;
+
+  before(function(done){
+    server = http.createServer(function(req, res){
+      console.log('got request');
+      res.writeHead(200, {});
+      res.end();
+    });
+    server.listen(3000, done);
+  });
+
+  after(function(){
+    server.close();
+  });
 
   beforeEach(function(){
     segment = integration('Segment.io')
-      .endpoint('http://httpbin.org')
+      .endpoint('http://localhost:3000')
       .retries(2)
-      .mapper({})();
+      .mapper({})
+      ();
   })
 
   describe('#map', function(){
@@ -86,22 +102,6 @@ describe('proto', function(){
       var track = helpers.track({ options: { 'Segment.io': false }});
       assert(!segment.enabled(track));
     })
-
-    it('should emit `request` before request', function(done){
-      var req = segment.request('get', '/get');
-      req.end(function(err, res){ done(err, res); });
-      segment.on('request', function(request){
-        assert(req == request);
-      });
-    })
-
-    it('should emit `response` after response', function(done){
-      var req = segment.request('get', '/get').end();
-      segment.on('response', function(res){
-        assert('http://httpbin.org/get' == res.body.url);
-        done();
-      });
-    })
   })
 
   describe('.ensure(value)', function(){
@@ -146,7 +146,7 @@ describe('proto', function(){
     })
 
     it('should set the endpoint', function(){
-      assert('http://httpbin.org' == segment.request('post').url);
+      assert('http://localhost:3000' == segment.request('post').url);
     })
 
     it('should set redirects to 0', function(){
@@ -170,6 +170,22 @@ describe('proto', function(){
       req.set('User-Agent', 'some-agent');
       assert.equal('some-agent', header['user-agent']);
     });
+
+    it('should emit `request` before request', function(done){
+      var req = segment.request('get', '/get');
+      req.end(function(err, res){ done(err, res); });
+      segment.on('request', function(request){
+        assert(req == request);
+      });
+    })
+
+    it('should emit `response` after response', function(done){
+      var req = segment.request('get', '/get').end();
+      segment.on('response', function(res){
+        assert(res.body);
+        done();
+      });
+    })
   })
 
   methods.forEach(function(method){
