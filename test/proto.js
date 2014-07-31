@@ -142,26 +142,40 @@ describe('proto', function(){
     })
 
     it('should set the method', function(){
-      assert('POST' == segment.request('post').method);
+      var req = segment.request('post');
+      assert.equal('POST', req.method);
+      req.abort();
+      req.end(function(){});
     })
 
     it('should set the endpoint', function(){
       var port = server.address().port;
-      assert('http://localhost:' + port == segment.request('post').url);
+      var req = segment.request('post');
+      assert.equal('http://localhost:' + port, req.url);
+      req.abort();
+      req.end(function(){});
     })
 
     it('should set redirects to 0', function(){
-      assert(0 == segment.request()._redirects);
+      var req = segment.request();
+      assert.equal(0, req._redirects);
+      req.abort();
+      req.end(function(){});
     })
 
     it('should allow absolute urls', function(){
-      assert('http://baz.com' == segment.request('post', 'http://baz.com').url);
+      var req = segment.request('post', 'http://baz.com');
+      assert.equal('http://baz.com', req.url);
+      req.abort();
+      req.end(function(){});
     })
 
     it('should set the user-agent', function(){
       var req = segment.request('post');
       var header = req.req._headers;
       assert.equal('Segment.io/1.0', header['user-agent']);
+      req.abort();
+      req.end(function(){});
     });
 
     it('should be able to override the default user agent', function(){
@@ -170,6 +184,8 @@ describe('proto', function(){
       assert.equal('Segment.io/1.0', header['user-agent']);
       req.set('User-Agent', 'some-agent');
       assert.equal('some-agent', header['user-agent']);
+      req.abort();
+      req.end(function(){});
     });
 
     it('should emit `request` before request', function(done){
@@ -181,7 +197,7 @@ describe('proto', function(){
     })
 
     it('should emit `response` after response', function(done){
-      var req = segment.request('get', '/get').end();
+      var req = segment.request('get', '/get').end(function(){});
       segment.on('response', function(res){
         assert(res.body);
         done();
@@ -194,11 +210,17 @@ describe('proto', function(){
     if ('search' == method) return;
     describe(fmt('.%s()', name), function(){
       it(fmt('should return %s request', method), function(){
-        assert(method.toUpperCase() == segment[name]().method);
+        var req = segment[name]();
+        assert.equal(method.toUpperCase(), req.method);
+        req.abort();
+        req.end(function(){});
       })
 
       it('should allow absolute urls', function(){
-        assert('https://baz.com' == segment[name]('https://baz.com').url);
+        var req = segment[name]('http://baz.com');
+        assert.equal('http://baz.com', req.url);
+        req.abort();
+        req.end(function(){});
       })
     })
   })
