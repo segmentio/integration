@@ -42,6 +42,7 @@ describe('proto', function(){
         assert.deepEqual([], segment.map(Number, ''));
       })
     })
+
     describe('when `map` is an object', function(){
       it('should return an empty array on mismatch', function(){
         var map = { a: '4be41523', b: 'd49ccea' };
