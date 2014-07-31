@@ -14,11 +14,10 @@ describe('proto', function(){
 
   before(function(done){
     server = http.createServer(function(req, res){
-      console.log('got request');
       res.writeHead(200, {});
       res.end();
     });
-    server.listen(3000, done);
+    server.listen(done);
   });
 
   after(function(){
@@ -27,7 +26,7 @@ describe('proto', function(){
 
   beforeEach(function(){
     segment = integration('Segment.io')
-      .endpoint('http://localhost:3000')
+      .endpoint('http://localhost:' + server.address().port)
       .retries(2)
       .mapper({})
       ();
@@ -147,7 +146,8 @@ describe('proto', function(){
     })
 
     it('should set the endpoint', function(){
-      assert('http://localhost:3000' == segment.request('post').url);
+      var port = server.address().port;
+      assert('http://localhost:' + port == segment.request('post').url);
     })
 
     it('should set redirects to 0', function(){
