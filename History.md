@@ -1,4 +1,20 @@
 
+1.3.1 / 2014-08-06
+==================
+
+  * Return request instance from onend
+  * tests: fix tests, no clue how they worked before...
+  * tests: prevent port used err
+  * tests: use http.Server for faster tests
+  * travis: remove node 0.11
+  * request: add default user agent
+  * add travis.yml
+  * timeout(): allow ms string
+  * tests: less whitespace
+  * errors: cleanup and capture stack trace
+  * inline channels and remove ./channels.js
+  * inline ecommerce wrapping in wrap-methods
+
 1.3.0 / 2014-07-23
 ==================
 
