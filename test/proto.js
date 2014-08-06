@@ -203,6 +203,12 @@ describe('proto', function(){
         done();
       });
     })
+
+    describe('.end()', function(){
+      it('should return the superagent request', function(){
+        assert(segment.request('post').end() instanceof request.Request);
+      });
+    });
   })
 
   methods.forEach(function(method){
