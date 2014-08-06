@@ -156,6 +156,12 @@ describe('proto', function(){
     it('should allow absolute urls', function(){
       assert('http://baz.com' == segment.request('post', 'http://baz.com').url);
     })
+
+    describe('.end()', function(){
+      it('should return the superagent request', function(){
+        assert(segment.request('post').end() instanceof request.Request);
+      });
+    });
   })
 
   methods.forEach(function(method){
