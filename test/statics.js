@@ -91,6 +91,22 @@ describe('statics', function(){
       var err = test.validate(msg);
       assert.equal(err, null);
     });
+
+    it('should error when methods match', function(){
+      var test = integration('segment');
+      test.requires('identify', 'email');
+      var msg = new Identify({});
+      var err = test.validate(msg);
+      assert.equal(err.message, 'segment: missing attribute "email" in "identify"');
+    });
+
+    it('should not return an error on method mismatch', function(){
+      var test = integration('segment');
+      test.requires('track', 'email');
+      var msg = new Identify({ userId: 'jd@example.com' });
+      var err = test.validate(msg);
+      assert.equal(err, null);
+    });
   });
 
   describe('.client()', function(){
