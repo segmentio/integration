@@ -97,6 +97,14 @@ describe('statics', function(){
     })
   })
 
+  describe('.channels(array)', function(){
+    it('should set `prototype.channels`', function(){
+      var test = integration('test');
+      test.channels(['one', 'two']);
+      assert.deepEqual(test.prototype.channels, ['one', 'two']);
+    });
+  });
+
   describe('.channel(chan)', function(){
     it('should push to prototype.channels', function(){
       var test = integration('test');
