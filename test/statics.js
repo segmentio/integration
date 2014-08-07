@@ -1,5 +1,7 @@
 
+var Identify = require('segmentio-facade').Identify;
 var helpers = require('./support');
+var fmt = require('util').format;
 var integration = require('..');
 var assert = require('assert');
 var http = require('http');
@@ -69,6 +71,27 @@ describe('statics', function(){
       assert(mapper == test().mapper);
     })
   })
+
+  describe('.requires(path)', function(){
+    it('should return an error when message `path` is falsey', function(){
+      var test = integration('segment');
+      test.requires('userId');
+      var date = new Date;
+      var iso = date.toISOString();
+      var msg = new Identify({ timestamp: date });
+      var err = test.validate(msg);
+      assert.equal(err.message, 'segment: missing attribute "userId" in "identify"');
+      // TODO: add more useful info to error.
+    });
+
+    it('should not return an error when path is truthy', function(){
+      var test = integration('segment');
+      test.requires('email');
+      var msg = new Identify({ userId: 'jd@example.com' });
+      var err = test.validate(msg);
+      assert.equal(err, null);
+    });
+  });
 
   describe('.client()', function(){
     it('should be enabled on client too', function(){
