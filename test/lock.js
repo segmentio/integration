@@ -38,6 +38,16 @@ describe('.locked(key, fn)', function(){
     ];
   });
 
+  it('should prefix with integration name', function(done){
+    segment.lock('some-key', function(err, unlock){
+      if (err) return done(err);
+      db.exists('Segment.io:some-key', function(err, exists){
+        if (err || !exists) return done(err || new Error('expected key to exist in redis'));
+        unlock(done);
+      });
+    });
+  });
+
   describe('without lock', function(){
     it('should override previous event', function(done){
       var batch = new Batch;
@@ -93,7 +103,6 @@ describe('.locked(key, fn)', function(){
     this.lock(msg.userId(), function(err, unlock){
       if (err) return fn(err);
       db.hget('users', msg.userId(), function(err, value){
-        console.log('hget()');
         if (err) return fn(err);
         if (value) return unlock(fn);
         db.hset('users', msg.userId(), msg.event(), function(err){
