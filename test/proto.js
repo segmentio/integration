@@ -241,6 +241,20 @@ describe('proto', function(){
       test.prototype.identify = mapper.test(done);
       test().identify({}, {}, done);
     })
+
+    it('should call the mapper with the correct context', function(){
+      var Test = integration('test').mapper({ track: track });
+      Test.prototype.track = function(){};
+      var test = Test();
+      test.track(helpers.track());
+      var ctx;
+
+      function track(){
+        ctx = this;
+      }
+
+      assert(ctx == test);
+    });
   })
 
   describe('.track(track, settings, fn)', function(){
