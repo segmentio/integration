@@ -214,6 +214,8 @@ describe('proto', function(){
   methods.forEach(function(method){
     var name = 'delete' == method ? 'del' : method;
     if ('search' == method) return;
+    if ('lock' == method) return;
+
     describe(fmt('.%s()', name), function(){
       it(fmt('should return %s request', method), function(){
         var req = segment[name]();
