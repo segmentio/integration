@@ -87,31 +87,6 @@ describe('proto', function(){
     })
   })
 
-  describe('.enabled(facade, settings)', function(){
-    it('should return true for server channel and enabled Segment.io', function(){
-      var track = helpers.track({ options: { 'Segment.io': {} } });
-      assert(segment.enabled(track));
-    })
-
-    it('should return false if channel isnt server', function(){
-      var track = helpers.track({ channel: 'mobile' });
-      assert(!segment.enabled(track));
-    })
-
-    it('should be false if the integration is set to false', function(){
-      var track = helpers.track({ options: { 'Segment.io': false }});
-      assert(!segment.enabled(track));
-    })
-  })
-
-  describe('.ensure(value)', function(){
-    it('should return validation error if value is empty', function(){
-      var err = segment.ensure('', 'userId');
-      assert(err instanceof errors.Validation);
-      assert(err.message == '"Segment.io" integration requires "userId"');
-    })
-  })
-
   describe('.redis()', function(){
     it('should set / get redis', function(){
       var client = {};

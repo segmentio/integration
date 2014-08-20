@@ -72,43 +72,6 @@ describe('statics', function(){
     })
   })
 
-  describe('.requires(path)', function(){
-    it('should return an error when message `path` is falsey', function(){
-      var test = integration('segment');
-      test.requires('userId');
-      var date = new Date;
-      var iso = date.toISOString();
-      var msg = new Identify({ timestamp: date });
-      var err = test.validate(msg);
-      assert.equal(err.message, 'segment: missing attribute "userId" in "identify"');
-      // TODO: add more useful info to error.
-    });
-
-    it('should not return an error when path is truthy', function(){
-      var test = integration('segment');
-      test.requires('email');
-      var msg = new Identify({ userId: 'jd@example.com' });
-      var err = test.validate(msg);
-      assert.equal(err, null);
-    });
-
-    it('should error when methods match', function(){
-      var test = integration('segment');
-      test.requires('identify', 'email');
-      var msg = new Identify({});
-      var err = test.validate(msg);
-      assert.equal(err.message, 'segment: missing attribute "email" in "identify"');
-    });
-
-    it('should not return an error on method mismatch', function(){
-      var test = integration('segment');
-      test.requires('track', 'email');
-      var msg = new Identify({ userId: 'jd@example.com' });
-      var err = test.validate(msg);
-      assert.equal(err, null);
-    });
-  });
-
   describe('.client()', function(){
     it('should be enabled on client too', function(){
       var test = integration('test').client()();
