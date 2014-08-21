@@ -21,6 +21,11 @@ describe('validations', function(){
       Segment.ensure('settings.apiKey');
     })
 
+    it('should add validation correctly', function(){
+      var keys = Object.keys(Segment.validations);
+      assert.deepEqual(keys, ['settings.apiKey']);
+    });
+
     it('should error if missing', function(){
       var err = Segment.validate({}, {});
       assert.equal('Segment', err.integration);
