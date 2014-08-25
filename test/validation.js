@@ -22,8 +22,10 @@ describe('validations', function(){
     })
 
     it('should add validation correctly', function(){
-      var keys = Object.keys(Segment.validations);
-      assert.deepEqual(keys, ['settings.apiKey']);
+      var all = Segment.validations;
+      assert.equal(1, all.length);
+      assert.equal('settings', all[0].type);
+      assert.equal('apiKey', all[0].path);
     });
 
     it('should error if missing', function(){
@@ -88,7 +90,7 @@ describe('validations', function(){
 
     beforeEach(function(){
       args = [];
-      Segment.ensure('settings.apiKey', function(msg, settings){
+      Segment.ensure(function(msg, settings){
         ctx = this;
         args.push(arguments);
       });
