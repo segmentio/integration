@@ -206,15 +206,15 @@ describe('proto', function(){
     })
   })
 
-  describe('.identify(identify, settings, fn)', function(){
+  describe('.identify(identify, fn)', function(){
     it('should do nothing', function(done){
-      segment.identify({}, {}, done);
+      segment.identify({}, done);
     })
 
     it('should map identify if mapper.identify is defined', function(done){
       var test = integration('test').mapper({ identify: mapper() });
       test.prototype.identify = mapper.test(done);
-      test().identify({}, {}, done);
+      test().identify({}, done);
     })
 
     it('should call the mapper with the correct context', function(){
@@ -232,10 +232,10 @@ describe('proto', function(){
     });
   })
 
-  describe('.track(track, settings, fn)', function(){
+  describe('.track(track, fn)', function(){
     it('should do nothing', function(done){
       var msg = helpers.track();
-      segment.track(msg, {}, done);
+      segment.track(msg, done);
     })
 
     it('should map track if mapper.track is defined', function(done){
@@ -320,9 +320,9 @@ describe('proto', function(){
       var msg = helpers.track({ event: 'Completed Order' });
       var settings = {};
       segment.completedOrder = spy();
-      segment.track(msg, settings, done);
+      segment.track(msg, done);
       var args = segment.completedOrder.args[0];
-      assert.deepEqual(args, [msg, settings, done]);
+      assert.deepEqual(args, [msg, done]);
       done();
     })
 
@@ -347,37 +347,37 @@ describe('proto', function(){
 
   describe('.page(page, settings, fn)', function(){
     it('should do nothing', function(done){
-      segment.page({}, {}, done);
+      segment.page({}, done);
     })
 
     it('should map page if mapper.page is defined', function(done){
       var test = integration('test').mapper({ page: mapper() });
       test.prototype.page = mapper.test(done);
-      test().page({}, {}, done);
+      test().page({}, done);
     })
   })
 
   describe('.screen(screen, settings, fn)', function(){
     it('should do nothing', function(done){
-      segment.screen({}, {}, done);
+      segment.screen({}, done);
     })
 
     it('should map screen if mapper.screen is defined', function(done){
       var test = integration('test').mapper({ screen: mapper() });
       test.prototype.screen = mapper.test(done);
-      test().screen({}, {}, done);
+      test().screen({}, done);
     })
   })
 
   describe('.group(group, settings, fn)', function(){
     it('should do nothing', function(done){
-      segment.group({}, {}, done);
+      segment.group({}, done);
     })
 
     it('should map group if mapper.group is defined', function(done){
       var test = integration('test').mapper({ group: mapper() });
       test.prototype.group = mapper.test(done);
-      test().group({}, {}, done);
+      test().group({}, done);
     })
   })
 })
