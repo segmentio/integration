@@ -31,12 +31,14 @@ describe('validations', function(){
     it('should error if missing', function(){
       var err = Segment.validate({}, {});
       assert.equal('Segment', err.integration);
+      assert.equal('INVALID_SETTINGS', err.code);
       assert.equal('Segment: setting "apiKey" is required', err.message);
     });
 
     it('should error if key is empty string', function(){
       var err = Segment.validate({}, {});
       assert.equal('Segment', err.integration);
+      assert.equal('INVALID_SETTINGS', err.code);
       assert.equal('Segment: setting "apiKey" is required', err.message);
     });
 
@@ -55,6 +57,7 @@ describe('validations', function(){
       var msg = new Track({});
       var err = Segment.validate(msg);
       assert.equal('Segment', err.integration);
+      assert.equal('MESSAGE_REJECTED', err.code);
       assert.equal('Segment: message attribute "userId" is required', err.message);
     });
 
