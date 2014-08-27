@@ -1,5 +1,7 @@
 
+var Identify = require('segmentio-facade').Identify;
 var helpers = require('./support');
+var fmt = require('util').format;
 var integration = require('..');
 var assert = require('assert');
 var http = require('http');
@@ -96,6 +98,14 @@ describe('statics', function(){
       assert(test.enabled(b, {}));
     })
   })
+
+  describe('.channels(array)', function(){
+    it('should set `prototype.channels`', function(){
+      var test = integration('test');
+      test.channels(['one', 'two']);
+      assert.deepEqual(test.prototype.channels, ['one', 'two']);
+    });
+  });
 
   describe('.channel(chan)', function(){
     it('should push to prototype.channels', function(){
