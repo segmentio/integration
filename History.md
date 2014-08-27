@@ -1,4 +1,20 @@
 
+2.0.0 / 2014-08-27
+==================
+
+ * use `reject()` in `.ensure('message.*')`
+ * add `.reject()` to reject messages.
+ * deps: upgrade facade
+ * .ensure(): error if setting is an empty string
+ * proto: remove all settings
+ * validations: move to array
+ * add `.channels(arr)`
+ * .handle(): pass response to callback on error
+ * add `.error(msg, ...)`
+ * accept settings in constructor (`Integration(settings)`)
+ * tests: add another retry test
+ * mapper: fix context
+
 1.3.1 / 2014-08-06
 ==================
 
