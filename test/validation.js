@@ -34,6 +34,12 @@ describe('validations', function(){
       assert.equal('Segment: setting "apiKey" is required', err.message);
     });
 
+    it('should error if key is empty string', function(){
+      var err = Segment.validate({}, {});
+      assert.equal('Segment', err.integration);
+      assert.equal('Segment: setting "apiKey" is required', err.message);
+    });
+
     it('should not error if given', function(){
       var err = Segment.validate({}, { apiKey: 'key' });
       assert(null == err);
