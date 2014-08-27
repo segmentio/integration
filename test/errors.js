@@ -15,6 +15,10 @@ describe('errors', function(){
       assert.equal('body', err.body);
       assert.equal('string', typeof err.stack);
     });
+
+    it('should not error without context', function(){
+      var err = new BadRequest('error', 'Segment');
+    });
   });
 
   describe('ValidationError', function(){
