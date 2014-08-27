@@ -214,7 +214,7 @@ describe('proto', function(){
     it('should map identify if mapper.identify is defined', function(done){
       var test = integration('test').mapper({ identify: mapper() });
       test.prototype.identify = mapper.test(done);
-      test().identify({}, done);
+      test({}).identify({}, done);
     })
 
     it('should call the mapper with the correct context', function(){
@@ -242,7 +242,7 @@ describe('proto', function(){
       var test = integration('test').mapper({ track: mapper() });
       test.prototype.track = mapper.test(done);
       var msg = helpers.track();
-      test().track(msg, {}, done);
+      test({}).track(msg, done);
     })
 
     it('should call .viewedProduct when the event is /viewed[ _]?product/i', function(){
@@ -389,8 +389,8 @@ describe('proto', function(){
  */
 
 function mapper(){
-  return function(_){
-    return { mapped: true };
+  return function(msg, settings){
+    return { msg: msg, settings: settings };
   };
 }
 
@@ -399,9 +399,10 @@ function mapper(){
  */
 
 mapper.test = function(done){
-  return function(message, settings){
-    assert(message.mapped);
-    assert(settings);
+  return function(payload, fn){
+    assert(payload.settings == this.settings);
+    assert(payload.msg);
+    assert.equal('function', typeof fn);
     done();
   };
 };
