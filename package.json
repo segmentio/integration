@@ -23,7 +23,7 @@
   "devDependencies": {
     "make-lint": "^1.0.1",
     "mocha": "~1.17.1",
-    "segmentio-facade": "0.x"
+    "segmentio-facade": "1.x"
   },
   "main": "lib/integration"
 }
