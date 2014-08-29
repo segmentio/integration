@@ -1,6 +1,6 @@
 
-var ValidationError = require('../lib/errors').Validation;
-var BadRequest = require('../lib/errors').BadRequest;
+var ValidationError = require('../lib/errors').ValidationError;
+var BadRequest = require('../lib/errors').BadRequestError;
 var integration = require('..');
 var assert = require('assert');
 
@@ -8,7 +8,7 @@ describe('errors', function(){
   describe('BadRequest', function(){
     it('should expose .stack', function(){
       var err = new BadRequest('error', 'Segment', { status: 400, body: 'body' });
-      assert.equal('error', err.message);
+      assert.equal('Segment: error', err.message);
       assert.equal('BAD_REQUEST', err.code);
       assert.equal('Segment', err.integration);
       assert.equal(400, err.status);
@@ -23,30 +23,34 @@ describe('errors', function(){
 
   describe('ValidationError', function(){
     it('should expose .stack', function(){
-      var err = new ValidationError('.key is required');
+      var err = new ValidationError('.key is required', 'Segment');
       assert.equal('INVALID_SETTINGS', err.code);
-      assert.equal('.key is required', err.message);
+      assert.equal('Segment: .key is required', err.message);
     });
   });
 
-  describe('.error("validation", msg, ctx)', function(){
-    it('should return new validation error', function(){
+  describe('.error(msg)', function(){
+    it('should return new bad request error', function(){
       var Segment = integration('Segment');
-      var err = Segment.error('validation', 'message', {});
-      assert.equal('INVALID_SETTINGS', err.code);
+      var err = Segment.error('message');
+      assert.equal('BAD_REQUEST', err.code);
       assert.equal('Segment: message', err.message);
       assert.equal('Segment', err.integration);
-      assert.deepEqual({}, err.ctx);
     });
   });
 
-  describe('.error("bad-request", msg, ctx)', function(){
+  describe('.error(msg)', function(){
     var Segment = integration('Segment');
-    var ctx = { status: 400, body: 'bad input' };
-    var err = Segment.error('bad-request', 'message', ctx);
+    var err = Segment.error('message');
     assert.equal('BAD_REQUEST', err.code);
     assert.equal('Segment: message', err.message);
     assert.equal('Segment', err.integration);
-    assert.deepEqual(err.ctx, ctx);
+  });
+
+  describe('.invalid(msg)', function(){
+    it('should return invalid settings error', function(){
+      var Segment = integration('Segment');
+      var err = Segment.invalid('error');
+    });
   });
 });
