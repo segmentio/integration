@@ -1,4 +1,9 @@
 
+2.0.3 / 2014-09-01
+==================
+
+ * normalize errors and add .error(msg, ...) as BadRequest
+
 2.0.2 / 2014-08-27
 ==================
 
