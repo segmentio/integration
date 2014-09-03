@@ -11,18 +11,21 @@
   "dependencies": {
     "analytics-events": "1.x",
     "debug": "~0.7.4",
-    "superagent": "~0.16.0",
-    "slug-component": "~1.1.0",
-    "superagent-retry": "~0.2.0",
-    "type": "git://github.com/segmentio/type",
     "methods": "0.0.1",
     "ms": "~0.6.2",
+    "shared-lock": "0.0.3",
+    "slug-component": "~1.1.0",
+    "superagent": "~0.16.0",
+    "superagent-retry": "~0.2.0",
     "to-no-case": "^0.1.2",
+    "type": "git://github.com/segmentio/type",
     "uniq-component": "^1.0.0"
   },
   "devDependencies": {
+    "batch": "^0.5.1",
     "make-lint": "^1.0.1",
     "mocha": "~1.17.1",
+    "redis": "^0.12.1",
     "segmentio-facade": "1.x"
   },
   "main": "lib/integration"
