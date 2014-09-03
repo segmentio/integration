@@ -87,6 +87,42 @@ describe('proto', function(){
     })
   })
 
+  describe('.jstrace()', function(){
+    it('should return noop', function(){
+      var fn = segment.jstrace();
+      assert.equal(fn.toString(), (function noop(){}).toString());
+    });
+
+    it('should set ._trace', function(){
+      var t = function(){};
+      segment.jstrace(t);
+      assert.equal(t, segment._trace);
+    });
+
+    it('should get ._trace', function(){
+      var t = function(){};
+      segment.jstrace(t);
+      assert.equal(t, segment.jstrace());
+    });
+  });
+
+  describe('.trace()', function(){
+    it('should call .jstrace()()', function(done){
+      var t = function(){
+        var args = [].slice.call(arguments);
+        assert.deepEqual(args, ['user:create', { id: 'user-id' }]);
+        done();
+      };
+
+      segment.jstrace(t);
+      segment.trace('user:create', { id: 'user-id' });
+    });
+
+    it('should not throw when .jstrace() is not set', function(){
+      segment.trace('user:create', { id: 'user-id' });
+    });
+  });
+
   describe('.redis()', function(){
     it('should set / get redis', function(){
       var client = {};
@@ -189,6 +225,7 @@ describe('proto', function(){
   methods.forEach(function(method){
     var name = 'delete' == method ? 'del' : method;
     if ('search' == method) return;
+    if ('trace' == method) return;
     describe(fmt('.%s()', name), function(){
       it(fmt('should return %s request', method), function(){
         var req = segment[name]();
