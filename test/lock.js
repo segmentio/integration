@@ -42,8 +42,7 @@ describe.only('lock', function(){
     segment.lock('some-key', function(err){
       db.exists('Segment.io:some-key', function(err, exists){
         if (err || !exists) return done(err || new Error('expected key to exists'));
-        segment.unlock('some-key');
-        done();
+        segment.unlock('some-key', done);
       });
     });
   });
@@ -105,21 +104,19 @@ describe.only('lock', function(){
     this.lock(msg.userId(), function(){
       db.hget('users', msg.userId(), function(err, value){
         if (err) {
-          self.unlock(msg.userId());
-          done(err);
+          self.unlock(msg.userId(), done);
           return;
         }
 
         if (value) {
-          self.unlock(msg.userId());
-          done();
+          self.unlock(msg.userId(), done);
           return;
         }
 
         db.hset('users', msg.userId(), msg.event(), function(err){
-          self.unlock(msg.userId());
-          if (err) return done(err);
-          done();
+          self.unlock(msg.userId(), function(){
+            done(err);
+          });
         });
       });
     });
