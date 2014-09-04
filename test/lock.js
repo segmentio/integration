@@ -5,7 +5,7 @@ var assert = require('assert');
 var redis = require('redis');
 var Batch = require('batch');
 
-describe.only('lock', function(){
+describe('lock', function(){
   var segment;
   var api;
   var db;
