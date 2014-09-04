@@ -32,6 +32,12 @@ describe('proto', function(){
       ();
   })
 
+  describe('#slug', function(){
+    it('should return the `name` in "slug" format', function(){
+      assert.equal('segment-io', segment.slug())
+    });
+  });
+
   describe('#map', function(){
     describe('when `map` is not an object or array', function(){
       it('should return an empty array', function(){

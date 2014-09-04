@@ -163,4 +163,11 @@ describe('statics', function(){
       });
     });
   });
+
+  describe('#slug', function(){
+    it('should return the `name` in "slug" format', function(){
+      var test = integration('Test.IO');
+      assert.equal('test-io', test.slug())
+    });
+  });
 })
