@@ -1,4 +1,12 @@
 
+2.1.0 / 2014-09-04
+==================
+
+ * travis: add redis-server
+ * add .lock() and .unlock()
+ * remove .lock(), .unlock() http methods
+ * add jstrace
+
 2.0.3 / 2014-09-01
 ==================
 
