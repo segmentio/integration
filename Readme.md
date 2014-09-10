@@ -15,7 +15,7 @@
   var MyIntegration = integration('My Integration');
   ```
 
-##### .ensure('<type>.<path>')
+##### .ensure(':type.:path')
 
   Ensure `type` (`settings` / `message`) with `path` exists.
 
