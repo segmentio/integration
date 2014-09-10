@@ -5,6 +5,186 @@
 
   Segment.io integration base prototype.
 
+## API
+
+##### `integration(name)`
+
+  Create an `Integration` constructor with `name`.
+
+  ```js
+  var MyIntegration = integration('My Integration');
+  ```
+
+##### .ensure('<type>.<path>')
+
+  Ensure `type` (`settings` / `message`) with `path` exists.
+
+  ```js
+  .ensure('settings.apiKey');
+  .ensure('message.userId');
+  .ensure('message.context.ip');
+  .ensure('message.traits.firstName');
+  ```
+
+##### .ensure(fn)
+
+  Add a custom validation with `fn(msg, settings) -> Error`
+
+  Dynamically validate settings (taken from Mixpanel):
+
+  ```js
+  Mixpanel.ensure(function(msg, settings){
+    if (settings.apiKey) return;
+    if ('track' != msg.type()) return;
+    if (!shouldImport(msg)) return;
+    return this.invalid('.apiKey is required if "track" message is older than 5 days.');
+  });
+  ```
+
+  Dynamically validate message:
+
+  ```js
+  Integration.ensure(function(msg, _){
+    if (msg.userId() && msg.proxy('message.context.ip')) return;
+    return this.reject('message.userId is required');
+  });
+  ```
+
+##### .endpoint(url)
+
+  Set the default endpoint for all requests.
+
+  ```js
+  .endpoint('https://api.integration.io/v1');
+  ```
+
+##### .timeout(ms)
+
+  Set the request timeout to be `ms`
+
+  ```js
+  .timeout(3000);
+  .timeout('3s');
+  ```
+
+##### .retries(n)
+
+  Set how many times the integration should retry a request
+
+  ```js
+  .retries(2);
+  ```
+
+##### .channels(array)
+
+  Enable the integration on all channels in `array`.
+
+  ```js
+  .channels(['server', 'client', 'mobile']);
+  ```
+
+##### .reject(reason, ...), #reject(reason, ...)
+
+  Reject a `msg` with `reason`, returns a `MessageRejectedError`.
+
+  ```js
+  if (something) return fn(this.reject('some reason'));
+  ```
+
+##### .invalid(reason, ...), #reject(reason, ...)
+
+  Reject `settings` with `reason`.
+
+  ```js
+  if (something) return fn(this.invalid('some reason'));
+  ```
+
+#### .error(reason, ...), #error(reason, ...)
+
+  Error with `reason`.
+
+  ```js
+  if (200 != res.status) return fn(this.error('expected 200 but got %d', res.status));
+  ```
+
+#### #map(obj, event)
+
+  Get a list of events with `obj` and `event`.
+
+  ```js
+  events = { my_event: 'a4991b88' }
+  .map(events, 'My Event');
+  // => ["a4991b88"]
+  .map(events, 'whatever');
+  // => []
+
+  events = [{ key: 'my event', value: '9b5eb1fa' }]
+  .map(events, 'my_event');
+  // => ["9b5eb1fa"]
+  .map(events, 'whatever');
+  // => []
+  ```
+
+#### #lock(key, fn)
+
+  Lock a `key` with `fn`.
+
+  This is used because some API's create duplicates.
+
+  ```js
+  var self = this;
+  var key = [this.settings.apiKey, msg.userId()].join(':');
+  this.lock(key, function(){
+    createUser(function(err, res){
+      self.unlock(key, function(){
+        if (err) return fn(err);
+        fn(null, res);
+      });
+    });
+  });
+  ```
+
+#### #unlock(key, fn)
+
+  Unlocks `key`.
+
+#### #<http-method>([url])
+
+  Create a new superagent.Request with `url`.
+
+  ```js
+  this
+    .post('/some-path')
+    .send(payload)
+    .end(fn);
+  ```
+
+#### #handle(fn)
+
+  Handle HTTP response, errors if the response is not `2xx, 3xx`.
+
+  ```js
+  this
+    .post('/some-path')
+    .send(payload)
+    .end(this.handle(fn));
+  ```
+
+#### #redis()
+
+  Set / Get redis instance.
+
+#### #logger()
+
+  Set / Get the logger instance.
+
+#### #jstrace()
+
+  Set / Get jstrace instance.
+
+#### #trace(str, obj)
+
+  Trace `str` with optional `obj`.
 
 ## License
 
