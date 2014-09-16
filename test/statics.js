@@ -63,6 +63,25 @@ describe('statics', function(){
     });
   })
 
+  describe('.mapping(name)', function(){
+    it('should create a mapping method', function(){
+      var Segment = integration('Segment');
+      Segment.mapping('events');
+      var segment = new Segment({ events: { a: 'd2ecbc98' } });
+      assert.deepEqual(['d2ecbc98'], segment.events('a'));
+    });
+
+    it('should use .map()', function(){
+      var Segment = integration('Segment');
+      Segment.mapping('events');
+      var segment = new Segment({ events: { a: 'd2ecbc98' } });
+      assert.deepEqual(['d2ecbc98'], segment.events('a'));
+      assert.deepEqual(['d2ecbc98'], segment.events('A'));
+      var segment = new Segment({ events: [{ key: 'a', value: 'd2ecbc98' }, { key: 'a', value: 'c18f536e' }] });
+      assert.deepEqual(['d2ecbc98', 'c18f536e'], segment.events('a'));
+    });
+  });
+
   describe('.mapper(obj)', function(){
     it('should set the mapper correctly', function(){
       var mapper = {};
