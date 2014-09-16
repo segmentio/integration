@@ -15,6 +15,50 @@
   var MyIntegration = integration('My Integration');
   ```
 
+### .mapping(key)
+
+  Add a new mapping option by `key`. The option will be an array that the user can pass in of `key -> value` mappings. This will also generated a `#KEY` method on the integration's prototype for easily accessing the mapping.
+
+  For example if your integration only supports a handful of events like `Signed Up` and `Completed Order`, you might create an mapping option called `events` that the user would pass in, like so:
+
+```js
+var MyIntegration = Integration('MyIntegration')
+  .mapping('events');
+```
+
+  Which means that when the integration is initialized, it would be passed a mapping of `events` to use, like so:
+
+```js
+new MyIntegration({
+  events: [
+    { key: 'Signed Up', value: 'Register' },
+    { key: 'Completed Order', value: 'Purchase' }
+  ]
+});
+```
+
+  Then later on, you can easily get all of the entries with a specific key, by calling `this.events(key)`. For example:
+
+```js
+MyIntegration.prototype.track = function(msg, fn){
+  var matches = this.events(msg.event());
+  var batch = new Batch;
+  var self = this;
+
+  each(matches, function(value){
+    batch.push(function(done){
+      self
+      .post('/track')
+      .send({ event: value })
+      .send({ props: msg.properties() })
+      .end(done);
+    });
+  });
+
+  batch.end(fn);
+};
+```
+
 ##### .ensure(':type.:path')
 
   Ensure `type` (`settings` / `message`) with `path` exists.
