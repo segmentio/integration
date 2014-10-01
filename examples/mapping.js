@@ -39,7 +39,7 @@ Example.prototype.track = function(msg, fn){
 
   return this
     .post('/events')
-    .send({ actions: values })
+    .send({ actions: actions })
     .send({ userId: msg.userId() })
     .end(this.handle(fn));
 };
