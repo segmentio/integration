@@ -59,6 +59,35 @@ MyIntegration.prototype.track = function(msg, fn){
 };
 ```
 
+##### .mapToTrack(arr)
+
+  Map the given array of `methods` to `track()` calls.
+
+  Some integration don't support page views, but they support events
+  so you can `.mapToTrack(['page'])` and the integration will start transforming
+  any page calls to events and pass them to `track()`.
+
+  There are 3 settings users can turn on:
+
+    - .trackAllPages
+    - .trackNamedPages
+    - .trackCategorizedPages
+
+  `.trackAllPages` will transform any `Page` to `Track(event: "Loaded a Page")`.
+  `.trackNamedPages` will transform any named page to `Track(event: "Viewed {category} {name} Page")`.
+  `.trackCategorizedPages` will transform any categorized page to `Track(event: "Viewed {category} Page")`.
+
+  Example:
+
+  ```js
+  var MyIntegration = Integration('My Integration')
+    .mapToTrack(['page']);
+
+  MyIntegration.prototype.track = function(track, done){
+    send(track.event(), track.properties(), done);
+  };
+  ```
+
 ##### .ensure(':type.:path')
 
   Ensure `type` (`settings` / `message`) with `path` exists.
