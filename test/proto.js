@@ -1,4 +1,5 @@
 
+var Page = require('segmentio-facade').Page;
 var fmt = require('util').format;
 var helpers = require('./support');
 var request = require('superagent');
@@ -29,7 +30,7 @@ describe('proto', function(){
       .endpoint('http://localhost:' + server.address().port)
       .retries(2)
       .mapper({})
-      ();
+      ({});
   })
 
   describe('#slug', function(){
@@ -390,9 +391,34 @@ describe('proto', function(){
     })
   })
 
-  describe('.page(page, settings, fn)', function(){
-    it('should do nothing', function(done){
-      segment.page({}, done);
+  describe('.page(page, fn)', function(){
+    var page;
+    var tracks;
+
+    beforeEach(function(){
+      var Segment = integration('Segment');
+      Segment.mapToTrack(['page']);
+      tracks = [];
+      segment = new Segment({});
+      segment.track = function(msg, done){
+        tracks.push(msg);
+        setImmediate(done);
+      };
+    });
+
+    beforeEach(function(){
+      page = new Page({
+        userId: 'user-id',
+        anonymousId: 'anonymous-id',
+        name: 'Integration',
+        category: 'Docs',
+        properties: {
+          url: 'segment.com/docs/page'
+        },
+        context: {
+          ip: '0.0.0.0'
+        }
+      });
     })
 
     it('should map page if mapper.page is defined', function(done){
@@ -400,9 +426,84 @@ describe('proto', function(){
       test.prototype.page = mapper.test(done);
       test().page({}, done);
     })
+
+    it('should do nothing by default', function(done){
+      integration('test')().page(null, done);
+    });
+
+    it('should send "Loaded a Page" if .trackAllPages is true', function(done){
+      segment.settings.trackAllPages = true;
+      segment.page(page, function(err){
+        if (err) return done(err);
+        var msg = tracks[0];
+        assert.equal(tracks.length, 1);
+        assert.equal(msg.userId(), 'user-id');
+        assert.equal(msg.anonymousId(), 'anonymous-id');
+        assert.deepEqual(msg.context(), { ip: '0.0.0.0' });
+        assert.deepEqual(msg.event(), 'Loaded a Page');
+        assert.deepEqual(msg.properties(), {
+          url: 'segment.com/docs/page',
+          category: 'Docs',
+          name: 'Integration'
+        });
+        done();
+      });
+    });
+
+    it('should send "Viewed Docs Page" if .trackCategorizedPages is true', function(done){
+      segment.settings.trackCategorizedPages = true;
+      segment.page(page, function(err){
+        if (err) return done(err);
+        var msg = tracks[0];
+        assert.equal(tracks.length, 1);
+        assert.equal(msg.userId(), 'user-id');
+        assert.equal(msg.anonymousId(), 'anonymous-id');
+        assert.deepEqual(msg.context(), { ip: '0.0.0.0' });
+        assert.deepEqual(msg.event(), 'Viewed Docs Page');
+        assert.deepEqual(msg.properties(), {
+          url: 'segment.com/docs/page',
+          category: 'Docs',
+          name: 'Integration'
+        });
+        done();
+      });
+    });
+
+    it('should send "Viewed Docs Integration Page" if .trackNamedPages is true', function(done){
+      segment.settings.trackNamedPages = true;
+      segment.page(page, function(err){
+        if (err) return done(err);
+        var msg = tracks[0];
+        assert.equal(tracks.length, 1);
+        assert.equal(msg.userId(), 'user-id');
+        assert.equal(msg.anonymousId(), 'anonymous-id');
+        assert.deepEqual(msg.context(), { ip: '0.0.0.0' });
+        assert.deepEqual(msg.event(), 'Viewed Docs Integration Page');
+        assert.deepEqual(msg.properties(), {
+          url: 'segment.com/docs/page',
+          category: 'Docs',
+          name: 'Integration'
+        });
+        done();
+      });
+    });
+
+    it('should send all tracks when pages settings are all true', function(done){
+      segment.settings.trackAllPages = true;
+      segment.settings.trackNamedPages = true;
+      segment.settings.trackCategorizedPages = true;
+      segment.page(page, function(err){
+        if (err) return done(err);
+        assert.equal(tracks.length, 3);
+        assert.equal(tracks[0].event(), 'Loaded a Page');
+        assert.equal(tracks[1].event(), 'Viewed Docs Page');
+        assert.equal(tracks[2].event(), 'Viewed Docs Integration Page');
+        done();
+      })
+    });
   })
 
-  describe('.screen(screen, settings, fn)', function(){
+  describe('.screen(screen, fn)', function(){
     it('should do nothing', function(done){
       segment.screen({}, done);
     })
@@ -414,7 +515,7 @@ describe('proto', function(){
     })
   })
 
-  describe('.group(group, settings, fn)', function(){
+  describe('.group(group, fn)', function(){
     it('should do nothing', function(done){
       segment.group({}, done);
     })
