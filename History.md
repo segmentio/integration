@@ -1,3 +1,11 @@
+
+2.3.3 / 2014-10-21
+==================
+
+  * lowering locking retry
+  * add docs
+  * add .mapToTrack() to explicitly enable default mapping to .track()
+
 2.3.2 / 2014-10-08
 ==================
 
