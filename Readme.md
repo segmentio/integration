@@ -15,7 +15,7 @@
   var MyIntegration = integration('My Integration');
   ```
 
-### .mapping(key)
+#### .mapping(key)
 
   Add a new mapping option by `key`. The option will be an array that the user can pass in of `key -> value` mappings. This will also generated a `#KEY` method on the integration's prototype for easily accessing the mapping.
 
@@ -59,7 +59,7 @@ MyIntegration.prototype.track = function(msg, fn){
 };
 ```
 
-##### .mapToTrack(arr)
+#### .mapToTrack(arr)
 
   Map the given array of `methods` to `track()` calls.
 
@@ -88,7 +88,7 @@ MyIntegration.prototype.track = function(msg, fn){
   };
   ```
 
-##### .ensure(':type.:path')
+#### .ensure(':type.:path')
 
   Ensure `type` (`settings` / `message`) with `path` exists.
 
@@ -99,7 +99,7 @@ MyIntegration.prototype.track = function(msg, fn){
   .ensure('message.traits.firstName');
   ```
 
-##### .ensure(fn)
+#### .ensure(fn)
 
   Add a custom validation with `fn(msg, settings) -> Error`
 
@@ -123,7 +123,7 @@ MyIntegration.prototype.track = function(msg, fn){
   });
   ```
 
-##### .endpoint(url)
+#### .endpoint(url)
 
   Set the default endpoint for all requests.
 
@@ -131,7 +131,7 @@ MyIntegration.prototype.track = function(msg, fn){
   .endpoint('https://api.integration.io/v1');
   ```
 
-##### .timeout(ms)
+#### .timeout(ms)
 
   Set the request timeout to be `ms`
 
@@ -140,7 +140,7 @@ MyIntegration.prototype.track = function(msg, fn){
   .timeout('3s');
   ```
 
-##### .retries(n)
+#### .retries(n)
 
   Set how many times the integration should retry a request
 
@@ -148,7 +148,7 @@ MyIntegration.prototype.track = function(msg, fn){
   .retries(2);
   ```
 
-##### .channels(array)
+#### .channels(array)
 
   Enable the integration on all channels in `array`.
 
@@ -156,7 +156,7 @@ MyIntegration.prototype.track = function(msg, fn){
   .channels(['server', 'client', 'mobile']);
   ```
 
-##### .reject(reason, ...), #reject(reason, ...)
+#### .reject(reason, ...), #reject(reason, ...)
 
   Reject a `msg` with `reason`, returns a `MessageRejectedError`.
 
@@ -164,7 +164,7 @@ MyIntegration.prototype.track = function(msg, fn){
   if (something) return fn(this.reject('some reason'));
   ```
 
-##### .invalid(reason, ...), #reject(reason, ...)
+#### .invalid(reason, ...), #reject(reason, ...)
 
   Reject `settings` with `reason`.
 
@@ -223,7 +223,7 @@ MyIntegration.prototype.track = function(msg, fn){
 
 #### #<http-method>([url])
 
-  Create a new superagent.Request with `url`.
+ Create a new superagent.Request with `url`. See [superagent](http://visionmedia.github.io/superagent/) docs for available methods (auth, headers, etc.).
 
   ```js
   this
