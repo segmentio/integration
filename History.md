@@ -1,4 +1,11 @@
 
+2.3.4 / 2014-11-21
+==================
+
+  * Follow same slug format as metadata
+  * Debug the name of the method
+  * Cleanup readme
+
 2.3.3 / 2014-10-21
 ==================
 
