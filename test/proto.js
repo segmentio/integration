@@ -35,7 +35,7 @@ describe('proto', function(){
 
   describe('#slug', function(){
     it('should return the `name` in "slug" format', function(){
-      assert.equal('segment-io', segment.slug())
+      assert.equal('segmentio', segment.slug())
     });
   });
 
