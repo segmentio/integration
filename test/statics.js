@@ -14,55 +14,6 @@ describe('statics', function(){
     })
   })
 
-  describe('.retries(n)', function(){
-    var requests = 0;
-    var server;
-
-    before(function(done){
-      server = http.createServer(respond);
-      server.listen(done);
-
-      function respond(req, res){
-        if (++requests < 4) {
-          res.writeHead(503);
-          res.end();
-        } else {
-          res.writeHead(200);
-          res.end();
-        }
-      }
-    })
-
-    after(function(){
-      server.close();
-    })
-
-    it('should retry', function(done){
-      var port = server.address().port;
-      var test = integration('test');
-      test.endpoint('http://localhost:' + port);
-      test.retries(5);
-      var req = test().request();
-      req.end(function(err, res){
-        assert(4 == requests);
-        done();
-      });
-    })
-
-    it('should not retry if retries is 0', function(done){
-      var port = server.address().port;
-      var test = integration('test');
-      test.endpoint('http://localhost:' + port);
-      test.retries(0);
-      var req = test().request();
-      requests = 0;
-      req.end(function(err, res){
-        assert.equal(1, requests);
-        done();
-      });
-    });
-  })
-
   describe('.mapping(name)', function(){
     it('should create a mapping method', function(){
       var Segment = integration('Segment');
