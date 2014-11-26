@@ -259,6 +259,42 @@ MyIntegration.prototype.track = function(msg, fn){
 
   Trace `str` with optional `obj`.
 
+#### #retry(err)
+
+  This method gets invoked by the worker
+  after the worker recieves an `(err,)`, it
+  will call this method to figure out if this integration
+  needs to retry this request.
+ 
+  By default it checks for:
+ 
+  ```js
+  err.status = 502
+  err.status = 503
+  err.status = 504
+  err.code = "ETIMEDOUT"
+  err.code = "EADDRINFO"
+  err.code = "ECONNRESET"
+  err.code = "ESOCKETTIMEDOUT"
+  err.timeout = N
+  ```
+ 
+  When the method returns true the worker re-queues the message
+  and it will be retried later on.
+
+  Sometimes you might want to "extend" that method
+  to get the worker to ignore more errors, suppose you
+  want to retry requests on [`429 "too many requests"`](http://doc.intercom.io/api/#rate-limiting), you can "extend" the method easily like:
+
+  ```js
+  var retry = proto.retry;
+  proto.retry = function(err){
+    return retry.apply(this, arguments) 
+      || 429 == err.status; // "too many requests, ratelimit exceeded"
+  };
+  ```
+ 
+
 ## License
 
 (The MIT License)
