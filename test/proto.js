@@ -528,6 +528,10 @@ describe('proto', function(){
   })
 
   describe('.retry(err)', function(){
+    it('500', function(){
+      assert(true == segment.retry({ status: 500 }));
+    });
+
     it('502', function(){
       assert(true == segment.retry({ status: 502 }));
     });
@@ -540,6 +544,18 @@ describe('proto', function(){
       assert(true == segment.retry({ status: 504 }));
     });
 
+    it('ECONNRESET', function(){
+      assert(true == segment.retry({ code: 'ECONNRESET' }));
+    });
+
+    it('ECONNREFUSED', function(){
+      assert(true == segment.retry({ code: 'ECONNREFUSED' }));
+    });
+
+    it('ECONNABORTED', function(){
+      assert(true == segment.retry({ code: 'ECONNABORTED' }));
+    });
+
     it('ETIMEDOUT', function(){
       assert(true == segment.retry({ code: 'ETIMEDOUT' }));
     });
@@ -548,18 +564,9 @@ describe('proto', function(){
       assert(true == segment.retry({ code: 'EADDRINFO' }));
     });
 
-    it('ECONNRESET', function(){
-      assert(true == segment.retry({ code: 'ECONNRESET' }));
+    it('ENOTFOUND', function(){
+      assert(true == segment.retry({ code: 'ENOTFOUND' }));
     });
-
-    it('ESOCKETTIMEDOUT', function(){
-      assert(true == segment.retry({ code: 'ESOCKETTIMEDOUT' }));
-    });
-
-    it('.timeout', function(){
-      assert(true == segment.retry({ timeout: 3000 }));
-      assert(true == segment.retry({ timeout: 2000 }));
-    })
 
     it('should not error on other errors', function(){
       assert(false == segment.retry({}));

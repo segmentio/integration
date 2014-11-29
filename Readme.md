@@ -269,14 +269,18 @@ MyIntegration.prototype.track = function(msg, fn){
   By default it checks for:
  
   ```js
+  err.status = 500
   err.status = 502
   err.status = 503
   err.status = 504
   err.code = "ETIMEDOUT"
   err.code = "EADDRINFO"
+  err.code = "EADDRINFO"
   err.code = "ECONNRESET"
-  err.code = "ESOCKETTIMEDOUT"
-  err.timeout = N
+  err.code = "ECONNREFUSED"
+  err.code = "ECONNABORTED"
+  err.code = "EHOSTUNREACH"
+  err.code = "ENOTFOUND"
   ```
  
   When the method returns true the worker re-queues the message
