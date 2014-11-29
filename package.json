@@ -14,7 +14,6 @@
     "debug": "~0.7.4",
     "methods": "0.0.1",
     "ms": "~0.6.2",
-    "shared-lock": "0.0.3",
     "superagent": "~0.16.0",
     "to-no-case": "^0.1.2",
     "type": "git://github.com/segmentio/type",
