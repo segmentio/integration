@@ -253,10 +253,6 @@ describe('proto', function(){
   })
 
   describe('.identify(identify, fn)', function(){
-    it('should do nothing', function(done){
-      segment.identify({}, done);
-    })
-
     it('should map identify if mapper.identify is defined', function(done){
       var test = integration('test').mapper({ identify: mapper() });
       test.prototype.identify = mapper.test(done);
@@ -279,11 +275,6 @@ describe('proto', function(){
   })
 
   describe('.track(track, fn)', function(){
-    it('should do nothing', function(done){
-      var msg = helpers.track();
-      segment.track(msg, done);
-    })
-
     it('should map track if mapper.track is defined', function(done){
       var test = integration('test').mapper({ track: mapper() });
       test.prototype.track = mapper.test(done);
@@ -427,10 +418,6 @@ describe('proto', function(){
       test().page({}, done);
     })
 
-    it('should do nothing by default', function(done){
-      integration('test')().page(null, done);
-    });
-
     it('should send "Loaded a Page" if .trackAllPages is true', function(done){
       segment.settings.trackAllPages = true;
       segment.page(page, function(err){
@@ -504,10 +491,6 @@ describe('proto', function(){
   })
 
   describe('.screen(screen, fn)', function(){
-    it('should do nothing', function(done){
-      segment.screen({}, done);
-    })
-
     it('should map screen if mapper.screen is defined', function(done){
       var test = integration('test').mapper({ screen: mapper() });
       test.prototype.screen = mapper.test(done);
@@ -516,10 +499,6 @@ describe('proto', function(){
   })
 
   describe('.group(group, fn)', function(){
-    it('should do nothing', function(done){
-      segment.group({}, done);
-    })
-
     it('should map group if mapper.group is defined', function(done){
       var test = integration('test').mapper({ group: mapper() });
       test.prototype.group = mapper.test(done);
