@@ -526,47 +526,6 @@ describe('proto', function(){
       test().group({}, done);
     })
   })
-
-  describe('.retry(err)', function(){
-    it('502', function(){
-      assert(true == segment.retry({ status: 502 }));
-    });
-
-    it('503', function(){
-      assert(true == segment.retry({ status: 503 }));
-    });
-
-    it('504', function(){
-      assert(true == segment.retry({ status: 504 }));
-    });
-
-    it('ETIMEDOUT', function(){
-      assert(true == segment.retry({ code: 'ETIMEDOUT' }));
-    });
-
-    it('EADDRINFO', function(){
-      assert(true == segment.retry({ code: 'EADDRINFO' }));
-    });
-
-    it('ECONNRESET', function(){
-      assert(true == segment.retry({ code: 'ECONNRESET' }));
-    });
-
-    it('ESOCKETTIMEDOUT', function(){
-      assert(true == segment.retry({ code: 'ESOCKETTIMEDOUT' }));
-    });
-
-    it('.timeout', function(){
-      assert(true == segment.retry({ timeout: 3000 }));
-      assert(true == segment.retry({ timeout: 2000 }));
-    })
-
-    it('should not error on other errors', function(){
-      assert(false == segment.retry({}));
-      assert(false == segment.retry(new Error('whoops')));
-      assert(false == segment.retry(new TypeError('whoops')));
-    });
-  });
 })
 
 /**
