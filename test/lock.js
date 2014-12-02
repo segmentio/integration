@@ -70,7 +70,7 @@ describe('lock', function(){
   });
 
   describe('with lock', function(){
-    it('should not override the previous event', function(done){
+    it('should return errors for any locks already aquired', function(done){
       var batch = new Batch;
       segment.track = withLock;
 
@@ -81,9 +81,8 @@ describe('lock', function(){
       });
 
       batch.end(function(err){
-        if (err) return done(err);
+        if (err) assert(err.code == 'RESOURCE_LOCKED');
         db.hgetall('users', function(err, vals){
-          if (err) return done(err);
           assert.deepEqual(vals, { 1: 'a', 2: 'e' });
           done();
         });
@@ -101,18 +100,11 @@ describe('lock', function(){
 
   function withLock(msg, done){
     var self = this;
-    this.lock(msg.userId(), function(){
+    this.lock(msg.userId(), function(err){
+      if (err) return done();
       db.hget('users', msg.userId(), function(err, value){
-        if (err) {
-          self.unlock(msg.userId(), done);
-          return;
-        }
-
-        if (value) {
-          self.unlock(msg.userId(), done);
-          return;
-        }
-
+        if (err) return self.unlock(msg.userId(), done);
+        if (value) return self.unlock(msg.userId(), done);
         db.hset('users', msg.userId(), msg.event(), function(err){
           self.unlock(msg.userId(), function(){
             done(err);

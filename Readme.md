@@ -180,6 +180,38 @@ MyIntegration.prototype.track = function(msg, fn){
   if (200 != res.status) return fn(this.error('expected 200 but got %d', res.status));
   ```
 
+#### .retry(fn)
+
+  Adds `fn` to be called when determining
+  if a request error should be retried. The `fn`
+  will be pass the error from the request or
+  the response.
+
+  ```js
+  Example.retry(function(err){
+    return 429 == err.status;
+  });
+  ```
+
+  By default, it already checks for:
+ 
+  ```js
+  err.status = 500
+  err.status = 502
+  err.status = 503
+  err.status = 504
+  err.code = "ETIMEDOUT"
+  err.code = "EADDRINFO"
+  err.code = "EADDRINFO"
+  err.code = "ECONNRESET"
+  err.code = "ECONNREFUSED"
+  err.code = "ECONNABORTED"
+  err.code = "EHOSTUNREACH"
+  err.code = "ENOTFOUND"
+  ```
+
+  Any methods added with `.retry` will be checked in addition to the list above.
+
 #### #map(obj, event)
 
   Get a list of events with `obj` and `event`.
@@ -261,40 +293,9 @@ MyIntegration.prototype.track = function(msg, fn){
 
 #### #retry(err)
 
-  This method gets invoked by the worker
-  after the worker recieves an `(err,)`, it
-  will call this method to figure out if this integration
-  needs to retry this request.
- 
-  By default it checks for:
- 
-  ```js
-  err.status = 502
-  err.status = 503
-  err.status = 504
-  err.code = "ETIMEDOUT"
-  err.code = "EADDRINFO"
-  err.code = "ECONNRESET"
-  err.code = "ESOCKETTIMEDOUT"
-  err.timeout = N
-  ```
- 
-  When the method returns true the worker re-queues the message
-  and it will be retried later on.
+  Check if `err` should be retried or not.
 
-  Sometimes you might want to "extend" that method
-  to get the worker to ignore more errors, suppose you
-  want to retry requests on [`429 "too many requests"`](http://doc.intercom.io/api/#rate-limiting), you can "extend" the method easily like:
-
-  ```js
-  var retry = proto.retry;
-  proto.retry = function(err){
-    return retry.apply(this, arguments) 
-      || 429 == err.status; // "too many requests, ratelimit exceeded"
-  };
-  ```
  
-
 ## License
 
 (The MIT License)
