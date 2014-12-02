@@ -10,6 +10,7 @@ var assert = require('assert');
 var http = require('http');
 
 describe('proto', function(){
+  var Segment;
   var segment;
   var server;
 
@@ -26,10 +27,18 @@ describe('proto', function(){
   });
 
   beforeEach(function(){
-    segment = integration('Segment.io')
+    Segment = integration('Segment.io')
       .endpoint('http://localhost:' + server.address().port)
-      .mapper({})
-      ({});
+      .mapper({});
+
+    Segment.prototype.page = tick;
+    Segment.prototype.track = tick;
+    Segment.prototype.alias = tick;
+    Segment.prototype.group = tick;
+    Segment.prototype.screen = tick;
+    Segment.prototype.identify = tick;
+
+    segment = new Segment({});
   })
 
   describe('#slug', function(){
@@ -376,6 +385,7 @@ describe('proto', function(){
       var msg = helpers.track({ event: 'Completed Order' });
       var Test = integration('test');
       Test.prototype.completedOrder = function(){ return 1; };
+      Test.prototype.track = tick;
       var test = Test();
       assert.equal(1, test.track(msg));
     })
@@ -591,4 +601,12 @@ function spy(){
   function push(){
     push.args.push([].slice.call(arguments));
   }
+}
+
+/**
+ * Tick.
+ */
+
+function tick(msg, fn){
+  setImmediate(fn);
 }
