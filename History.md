@@ -1,4 +1,12 @@
 
+3.0.0 / 2014-12-02
+==================
+
+  * remove default implementations of track, alias, identify, page, screen and group.
+  * deprecate .retries()
+  * remove superagent-retry
+  * add retry
+
 2.3.4 / 2014-11-21
 ==================
 
