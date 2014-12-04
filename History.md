@@ -1,4 +1,9 @@
 
+3.0.4 / 2014-12-04
+==================
+
+ * Add .agent() for setting the http.Agent on requests
+
 3.0.3 / 2014-12-02
 ==================
 
