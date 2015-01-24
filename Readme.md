@@ -8,7 +8,7 @@
   
 ## Integrating with Segment
 
-Interested in integrating your service with us? Start at our [Partners page](https://segment.com/partners/).
+Interested in integrating your service with us? Start on our [Partners page](https://segment.com/partners/).
 
 
 ## API
