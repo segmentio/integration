@@ -4,6 +4,12 @@
 # segmentio-integration
 
   Segment integration base prototype.
+  
+  
+## Integrating with Segment
+
+Interested in integrating your service with us? Start at our [Partners page](https://segment.com/partners/).
+
 
 ## API
 
