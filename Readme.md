@@ -21,6 +21,21 @@ Interested in integrating your service with us? Start on our [Partners page](htt
   var MyIntegration = integration('My Integration');
   ```
 
+#### #initialize()
+
+  Once the integration is initialized (`new MyIntegration()`) it's `.initialize()` method will be called
+  so you can do all sorts of fancy stuff if you need to, for example:
+
+```js
+MyIntegration.prototype.initialize = function(){
+  if (this.settings.version == 'v2') {
+    this.track = this.trackV2;
+  } else {
+    this.track = this.trackV1;
+  }
+};
+```
+
 #### .mapping(key)
 
   Add a new mapping option by `key`. The option will be an array that the user can pass in of `key -> value` mappings. This will also generated a `#KEY` method on the integration's prototype for easily accessing the mapping.
