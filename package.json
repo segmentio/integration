@@ -1,6 +1,6 @@
 {
   "name": "segmentio-integration",
-  "version": "3.0.6",
+  "version": "3.1.0",
   "description": "Segment.io integration base prototype",
   "keywords": [],
   "author": "Segment.io <friends@segment.io>",
