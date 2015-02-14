@@ -39,11 +39,11 @@ describe('proto', function(){
     Segment.prototype.identify = tick;
 
     segment = new Segment({});
-  })
+  });
 
   describe('#slug', function(){
     it('should return the `name` in "slug" format', function(){
-      assert.equal('segmentio', segment.slug())
+      assert.equal('segmentio', segment.slug());
     });
   });
 
@@ -54,53 +54,56 @@ describe('proto', function(){
         assert.deepEqual([], segment.map('', ''));
         assert.deepEqual([], segment.map(null, ''));
         assert.deepEqual([], segment.map(Number, ''));
-      })
-    })
+      });
+    });
 
     describe('when `map` is an object', function(){
       it('should return an empty array on mismatch', function(){
         var map = { a: '4be41523', b: 'd49ccea' };
         assert.deepEqual([], segment.map(map, 'c'));
-      })
+      });
 
       it('should return an array with the value on match', function(){
         var map = { a: '48dc32b2', b: '48dc32b2' };
         assert.deepEqual(['48dc32b2'], segment.map(map, 'b'));
-      })
+      });
 
       it('should use to-no-case to match keys', function(){
         var map = { 'My Event': '7b4fe803', 'other event': '2107007a' };
         assert.deepEqual(['7b4fe803'], segment.map(map, 'my_event'));
-      })
-    })
+      });
+    });
 
     describe('when .options.events is an array', function(){
       it('should return an empty array if the array isnt a map', function(){
         var map = ['one', 'two'];
         assert.deepEqual([], segment.map(map, 'one'));
-      })
+      });
 
       it('should return an empty array when the array is empty', function(){
         var map = [];
         assert.deepEqual([], segment.map(map, 'wee'));
-      })
+      });
 
       it('should return an empty array on mismatch', function(){
         var map = [{ key: 'my event', value: '1121f10f' }];
         assert.deepEqual([], segment.map(map, 'event'));
-      })
+      });
 
       it('should return all matches in the array', function(){
-        var map = [{ key: 'baz', value: '4cff6219' }, { key: 'baz', value: '4426d54'} ];
+        var map = [
+          { key: 'baz', value: '4cff6219' },
+          { key: 'baz', value: '4426d54' }
+        ];
         assert.deepEqual(['4cff6219', '4426d54'], segment.map(map, 'baz'));
-      })
+      });
 
       it('should use to-no-case to match keys', function(){
         var map = [{ key: 'My Event', value: 'a35bd696' }];
         assert.deepEqual(['a35bd696'], segment.map(map, 'my_event'));
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('.jstrace()', function(){
     it('should return noop', function(){
@@ -143,36 +146,36 @@ describe('proto', function(){
       var client = {};
       segment.redis(client);
       assert(client == segment.redis());
-    })
+    });
 
     it('should return the integration when setting redis', function(){
       assert(segment == segment.redis({}));
-    })
-  })
+    });
+  });
 
   describe('.logger()', function(){
     it('should set / get logger', function(){
       var logger = {};
       segment.logger(logger);
       assert(logger == segment.logger());
-    })
+    });
 
     it('should return the integration when setting logger', function(){
       assert(segment == segment.logger({}));
-    })
-  })
+    });
+  });
 
   describe('.request()', function(){
     it('should return a new superagent request', function(){
       assert(segment.request() instanceof request.Request);
-    })
+    });
 
     it('should set the method', function(){
       var req = segment.request('post');
       assert.equal('POST', req.method);
       req.abort();
       req.end(function(){});
-    })
+    });
 
     it('should set the endpoint', function(){
       var port = server.address().port;
@@ -180,21 +183,21 @@ describe('proto', function(){
       assert.equal('http://localhost:' + port, req.url);
       req.abort();
       req.end(function(){});
-    })
+    });
 
     it('should set redirects to 0', function(){
       var req = segment.request();
       assert.equal(0, req._redirects);
       req.abort();
       req.end(function(){});
-    })
+    });
 
     it('should allow absolute urls', function(){
       var req = segment.request('post', 'http://baz.com');
       assert.equal('http://baz.com', req.url);
       req.abort();
       req.end(function(){});
-    })
+    });
 
     it('should set the user-agent', function(){
       var req = segment.request('post');
@@ -220,7 +223,7 @@ describe('proto', function(){
       segment.on('request', function(request){
         assert(req == request);
       });
-    })
+    });
 
     it('should emit `response` after response', function(done){
       var req = segment.request('get', '/get').end(function(){});
@@ -228,14 +231,14 @@ describe('proto', function(){
         assert(res.body);
         done();
       });
-    })
+    });
 
     describe('.end()', function(){
       it('should return the superagent request', function(){
         assert(segment.request('post').end() instanceof request.Request);
       });
     });
-  })
+  });
 
   methods.forEach(function(method){
     var name = 'delete' == method ? 'del' : method;
@@ -249,23 +252,23 @@ describe('proto', function(){
         assert.equal(method.toUpperCase(), req.method);
         req.abort();
         req.end(function(){});
-      })
+      });
 
       it('should allow absolute urls', function(){
         var req = segment[name]('http://baz.com');
         assert.equal('http://baz.com', req.url);
         req.abort();
         req.end(function(){});
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('.identify(identify, fn)', function(){
     it('should map identify if mapper.identify is defined', function(done){
       var test = integration('test').mapper({ identify: mapper() });
       test.prototype.identify = mapper.test(done);
       test({}).identify({}, done);
-    })
+    });
 
     it('should call the mapper with the correct context', function(){
       var Test = integration('test').mapper({ track: track });
@@ -280,7 +283,7 @@ describe('proto', function(){
 
       assert(ctx == test);
     });
-  })
+  });
 
   describe('.track(track, fn)', function(){
     it('should map track if mapper.track is defined', function(done){
@@ -288,7 +291,7 @@ describe('proto', function(){
       test.prototype.track = mapper.test(done);
       var msg = helpers.track();
       test({}).track(msg, done);
-    })
+    });
 
     it('should call .viewedProduct when the event is /viewed[ _]?product/i', function(){
       var track = helpers.track;
@@ -303,7 +306,7 @@ describe('proto', function(){
       assert.equal('viewed product', args[1][0].event());
       assert.equal('viewed_product', args[2][0].event());
       assert.equal('viewedProduct', args[3][0].event());
-    })
+    });
 
     it('should call .addedProduct when the event is /added[ _]?product/i', function(){
       var track = helpers.track;
@@ -318,7 +321,7 @@ describe('proto', function(){
       assert.equal('added product', args[1][0].event());
       assert.equal('added_product', args[2][0].event());
       assert.equal('addedProduct', args[3][0].event());
-    })
+    });
 
     it('should call .removedProduct when the event is /removed[ _]?product/i', function(){
       var track = helpers.track;
@@ -333,7 +336,7 @@ describe('proto', function(){
       assert.equal('removed product', args[1][0].event());
       assert.equal('removed_product', args[2][0].event());
       assert.equal('removedProduct', args[3][0].event());
-    })
+    });
 
     it('should call .completedOrder when the event is /removed[ _]?product/i', function(){
       var track = helpers.track;
@@ -348,7 +351,7 @@ describe('proto', function(){
       assert.equal('completed order', args[1][0].event());
       assert.equal('completed_order', args[2][0].event());
       assert.equal('completedOrder', args[3][0].event());
-    })
+    });
 
     it('should not call .track if a method is found', function(){
       var msg = helpers.track({ event: 'Completed Order' });
@@ -359,7 +362,7 @@ describe('proto', function(){
       test.track(msg);
       assert.equal(0, Test.prototype.track.args.length);
       assert.equal(1, Test.prototype.completedOrder.args.length);
-    })
+    });
 
     it('should apply arguments to methods', function(done){
       var msg = helpers.track({ event: 'Completed Order' });
@@ -369,7 +372,7 @@ describe('proto', function(){
       var args = segment.completedOrder.args[0];
       assert.deepEqual(args, [msg, done]);
       done();
-    })
+    });
 
     it('should not error if a method is not implemented and fallback to track', function(){
       var msg = helpers.track({ event: 'Completed Order' });
@@ -379,7 +382,7 @@ describe('proto', function(){
       var test = Test();
       test.track(msg);
       assert.equal(1, Test.prototype.track.args.length);
-    })
+    });
 
     it('should return the value', function(){
       var msg = helpers.track({ event: 'Completed Order' });
@@ -388,8 +391,8 @@ describe('proto', function(){
       Test.prototype.track = tick;
       var test = Test();
       assert.equal(1, test.track(msg));
-    })
-  })
+    });
+  });
 
   describe('.page(page, fn)', function(){
     var page;
@@ -419,13 +422,13 @@ describe('proto', function(){
           ip: '0.0.0.0'
         }
       });
-    })
+    });
 
     it('should map page if mapper.page is defined', function(done){
       var test = integration('test').mapper({ page: mapper() });
       test.prototype.page = mapper.test(done);
       test().page({}, done);
-    })
+    });
 
     it('should send "Loaded a Page" if .trackAllPages is true', function(done){
       segment.settings.trackAllPages = true;
@@ -495,25 +498,25 @@ describe('proto', function(){
         assert.equal(tracks[1].event(), 'Viewed Docs Page');
         assert.equal(tracks[2].event(), 'Viewed Docs Integration Page');
         done();
-      })
+      });
     });
-  })
+  });
 
   describe('.screen(screen, fn)', function(){
     it('should map screen if mapper.screen is defined', function(done){
       var test = integration('test').mapper({ screen: mapper() });
       test.prototype.screen = mapper.test(done);
       test().screen({}, done);
-    })
-  })
+    });
+  });
 
   describe('.group(group, fn)', function(){
     it('should map group if mapper.group is defined', function(done){
       var test = integration('test').mapper({ group: mapper() });
       test.prototype.group = mapper.test(done);
       test().group({}, done);
-    })
-  })
+    });
+  });
 
   describe('.retry(err)', function(){
     it('500', function(){
@@ -562,7 +565,7 @@ describe('proto', function(){
       assert(false == segment.retry(new TypeError('whoops')));
     });
   });
-})
+});
 
 /**
  * Default mapper.
