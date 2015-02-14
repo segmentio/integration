@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "batch": "^0.5.1",
-    "make-lint": "^1.0.1",
+    "jscs": "^1.11.3",
     "mocha": "~1.17.1",
     "redis": "^0.12.1",
     "segmentio-facade": "2.x"
