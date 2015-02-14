@@ -1,4 +1,11 @@
 
+3.0.6 / 2015-02-14
+==================
+
+  * Bring makefile, deps in line with template
+  * docs: add #initialize
+  * Update readme
+
 3.0.5 / 2014-12-08
 ==================
 
