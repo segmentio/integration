@@ -41,6 +41,22 @@ describe('proto', function(){
     segment = new Segment({});
   });
 
+  describe('()', function(){
+    it('should call #initialize', function(){
+      var s = Segment.prototype.initialize = spy();
+      Segment();
+      assert.equal(1, s.args.length);
+    });
+
+    it('should call #wrapMethods() after #initialize', function(){
+      var track = spy();
+      Segment.prototype.track = track;
+      Segment.prototype.initialize = function(){ assert(track == this.track); };
+      var s = Segment();
+      assert(track != s.track);
+    });
+  });
+
   describe('#slug', function(){
     it('should return the `name` in "slug" format', function(){
       assert.equal('segmentio', segment.slug());
