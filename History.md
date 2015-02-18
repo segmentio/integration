@@ -1,4 +1,11 @@
 
+3.2.0 / 2015-02-18
+==================
+
+  * .mapToTrack(): add screen support
+  * tests: add #initialize closes #57
+
+
 3.1.0 / 2015-02-14
 ==================
 
