@@ -1,5 +1,6 @@
 
 var Page = require('segmentio-facade').Page;
+var Screen = require('segmentio-facade').Screen;
 var fmt = require('util').format;
 var helpers = require('./support');
 var request = require('superagent');
@@ -519,13 +520,112 @@ describe('proto', function(){
   });
 
   describe('.screen(screen, fn)', function(){
+    var screen;
+    var tracks;
+
+    beforeEach(function(){
+      var Segment = integration('Segment');
+      Segment.mapToTrack(['screen']);
+      tracks = [];
+      segment = new Segment({});
+      segment.track = function(msg, done){
+        tracks.push(msg);
+        setImmediate(done);
+      };
+    });
+
+    beforeEach(function(){
+      screen = new Screen({
+        userId: 'user-id',
+        anonymousId: 'anonymous-id',
+        name: 'Integration',
+        category: 'Docs',
+        properties: {
+          view: 'docs - screen'
+        },
+        context: {
+          ip: '0.0.0.0'
+        }
+      });
+    });
+
     it('should map screen if mapper.screen is defined', function(done){
       var test = integration('test').mapper({ screen: mapper() });
       test.prototype.screen = mapper.test(done);
       test().screen({}, done);
     });
-  });
 
+    it('should send "Loaded a Screen" if .trackAllPages is true', function(done){
+      segment.settings.trackAllPages = true;
+      segment.screen(screen, function(err){
+        if (err) return done(err);
+        var msg = tracks[0];
+        assert.equal(tracks.length, 1);
+        assert.equal(msg.userId(), 'user-id');
+        assert.equal(msg.anonymousId(), 'anonymous-id');
+        assert.deepEqual(msg.context(), { ip: '0.0.0.0' });
+        assert.deepEqual(msg.event(), 'Loaded a Screen');
+        assert.deepEqual(msg.properties(), {
+          view: 'docs - screen',
+          category: 'Docs',
+          name: 'Integration'
+        });
+        done();
+      });
+    });
+
+    it('should send "Viewed Docs Screen" if .trackCategorizedPages is true', function(done){
+      segment.settings.trackCategorizedPages = true;
+      segment.screen(screen, function(err){
+        if (err) return done(err);
+        var msg = tracks[0];
+        assert.equal(tracks.length, 1);
+        assert.equal(msg.userId(), 'user-id');
+        assert.equal(msg.anonymousId(), 'anonymous-id');
+        assert.deepEqual(msg.context(), { ip: '0.0.0.0' });
+        assert.deepEqual(msg.event(), 'Viewed Docs Screen');
+        assert.deepEqual(msg.properties(), {
+          view: 'docs - screen',
+          category: 'Docs',
+          name: 'Integration'
+        });
+        done();
+      });
+    });
+
+    it('should send "Viewed Docs Integration Screen" if .trackNamedPages is true', function(done){
+      segment.settings.trackNamedPages = true;
+      segment.screen(screen, function(err){
+        if (err) return done(err);
+        var msg = tracks[0];
+        assert.equal(tracks.length, 1);
+        assert.equal(msg.userId(), 'user-id');
+        assert.equal(msg.anonymousId(), 'anonymous-id');
+        assert.deepEqual(msg.context(), { ip: '0.0.0.0' });
+        assert.deepEqual(msg.event(), 'Viewed Docs Integration Screen');
+        assert.deepEqual(msg.properties(), {
+          view: 'docs - screen',
+          category: 'Docs',
+          name: 'Integration'
+        });
+        done();
+      });
+    });
+
+    it('should send all tracks when pages settings are all true', function(done){
+      segment.settings.trackAllPages = true;
+      segment.settings.trackNamedPages = true;
+      segment.settings.trackCategorizedPages = true;
+      segment.screen(screen, function(err){
+        if (err) return done(err);
+        assert.equal(tracks.length, 3);
+        assert.equal(tracks[0].event(), 'Loaded a Screen');
+        assert.equal(tracks[1].event(), 'Viewed Docs Screen');
+        assert.equal(tracks[2].event(), 'Viewed Docs Integration Screen');
+        done();
+      });
+    });
+  });
   describe('.group(group, fn)', function(){
     it('should map group if mapper.group is defined', function(done){
       var test = integration('test').mapper({ group: mapper() });
