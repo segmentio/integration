@@ -6,7 +6,7 @@
   "author": "Segment.io <friends@segment.io>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/segmentio/segmentio-integration.git"
+    "url": "git://github.com/segmentio/integration.git"
   },
   "dependencies": {
     "analytics-events": "1.x",
