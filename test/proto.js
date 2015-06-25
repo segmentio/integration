@@ -245,6 +245,11 @@ describe('proto', function(){
     it('should emit `response` after response', function(done){
       var req = segment.request('get', '/get').end(function(){});
       segment.on('response', function(res){
+        assert(res);
+        assert(res.header);
+        assert(res.request.url);
+        assert(res.request.qs);
+        assert(res.request);
         assert(res.body);
         done();
       });
