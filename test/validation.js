@@ -32,14 +32,14 @@ describe('validations', function(){
       var err = Segment.validate({}, {});
       assert.equal('Segment', err.integration);
       assert.equal('INVALID_SETTINGS', err.code);
-      assert.equal('Segment: setting "apiKey" is required', err.message);
+      assert.equal('setting "apiKey" is required', err.message);
     });
 
     it('should error if key is empty string', function(){
       var err = Segment.validate({}, {});
       assert.equal('Segment', err.integration);
       assert.equal('INVALID_SETTINGS', err.code);
-      assert.equal('Segment: setting "apiKey" is required', err.message);
+      assert.equal('setting "apiKey" is required', err.message);
     });
 
     it('should not error if given', function(){
@@ -58,7 +58,7 @@ describe('validations', function(){
       var err = Segment.validate(msg);
       assert.equal('Segment', err.integration);
       assert.equal('MESSAGE_REJECTED', err.code);
-      assert.equal('Segment: message attribute "userId" is required', err.message);
+      assert.equal('message attribute "userId" is required', err.message);
     });
 
     it('should not error if given', function(){
@@ -77,7 +77,7 @@ describe('validations', function(){
       var msg = new Track({});
       var err = Segment.validate(msg);
       assert.equal('Segment', err.integration);
-      assert.equal('Segment: message attribute "context.some_attr" is required', err.message);
+      assert.equal('message attribute "context.some_attr" is required', err.message);
     });
 
     it('should not error if given', function(){

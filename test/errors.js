@@ -8,7 +8,7 @@ describe('errors', function(){
   describe('BadRequest', function(){
     it('should expose .stack', function(){
       var err = new BadRequest('error', 'Segment', { status: 400, body: 'body' });
-      assert.equal('Segment: error', err.message);
+      assert.equal('error', err.message);
       assert.equal('BAD_REQUEST', err.code);
       assert.equal('Segment', err.integration);
       assert.equal(400, err.status);
@@ -25,7 +25,7 @@ describe('errors', function(){
     it('should expose .stack', function(){
       var err = new ValidationError('.key is required', 'Segment');
       assert.equal('INVALID_SETTINGS', err.code);
-      assert.equal('Segment: .key is required', err.message);
+      assert.equal('.key is required', err.message);
     });
   });
 
@@ -34,7 +34,7 @@ describe('errors', function(){
       var Segment = integration('Segment');
       var err = Segment.error('message');
       assert.equal('BAD_REQUEST', err.code);
-      assert.equal('Segment: message', err.message);
+      assert.equal('message', err.message);
       assert.equal('Segment', err.integration);
     });
   });
@@ -43,7 +43,7 @@ describe('errors', function(){
     var Segment = integration('Segment');
     var err = Segment.error('message');
     assert.equal('BAD_REQUEST', err.code);
-    assert.equal('Segment: message', err.message);
+    assert.equal('message', err.message);
     assert.equal('Segment', err.integration);
   });
 
