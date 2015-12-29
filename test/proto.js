@@ -452,6 +452,12 @@ describe('proto', function(){
       test().page({}, done);
     });
 
+    it('should map page if mapper.screen is defined', function(done){
+      var test = integration('test').mapper({ screen: mapper() });
+      test.prototype.page = mapper.test(done);
+      test().page({}, done);
+    });
+
     it('should send "Loaded a Page" if .trackAllPages is true', function(done){
       segment.settings.trackAllPages = true;
       segment.page(page, function(err){
@@ -522,6 +528,20 @@ describe('proto', function(){
         done();
       });
     });
+
+    it('should send events for screen when only page is defined', function(done){
+      segment.settings.trackAllPages = true;
+      segment.settings.trackNamedPages = true;
+      segment.settings.trackCategorizedPages = true;
+      segment.screen(page, function(err){
+        if (err) return done(err);
+        assert.equal(tracks.length, 3);
+        assert.equal(tracks[0].event(), 'Loaded a Page');
+        assert.equal(tracks[1].event(), 'Viewed Docs Page');
+        assert.equal(tracks[2].event(), 'Viewed Docs Integration Page');
+        done();
+      });
+    });
   });
 
   describe('.screen(screen, fn)', function(){
@@ -556,6 +576,12 @@ describe('proto', function(){
 
     it('should map screen if mapper.screen is defined', function(done){
       var test = integration('test').mapper({ screen: mapper() });
+      test.prototype.screen = mapper.test(done);
+      test().screen({}, done);
+    });
+
+    it('should map screen if mapper.page is defined', function(done){
+      var test = integration('test').mapper({ page: mapper() });
       test.prototype.screen = mapper.test(done);
       test().screen({}, done);
     });
@@ -630,7 +656,22 @@ describe('proto', function(){
         done();
       });
     });
+
+    it('should send events for page when only screen is defined', function(done){
+      segment.settings.trackAllPages = true;
+      segment.settings.trackNamedPages = true;
+      segment.settings.trackCategorizedPages = true;
+      segment.page(screen, function(err){
+        if (err) return done(err);
+        assert.equal(tracks.length, 3);
+        assert.equal(tracks[0].event(), 'Loaded a Screen');
+        assert.equal(tracks[1].event(), 'Viewed Docs Screen');
+        assert.equal(tracks[2].event(), 'Viewed Docs Integration Screen');
+        done();
+      });
+    });
   });
+
   describe('.group(group, fn)', function(){
     it('should map group if mapper.group is defined', function(done){
       var test = integration('test').mapper({ group: mapper() });
