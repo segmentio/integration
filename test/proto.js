@@ -656,6 +656,10 @@ describe('proto', function(){
       assert(true == segment.retry({ status: 504 }));
     });
 
+    it('429', function(){
+      assert(true == segment.retry({ status: 429 }));
+    });
+
     it('ECONNRESET', function(){
       assert(true == segment.retry({ code: 'ECONNRESET' }));
     });
