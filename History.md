@@ -1,4 +1,12 @@
 
+3.2.1 / 2016-03-21
+==================
+
+  * add 429 retry case
+  * Remove redundant integration name prefix, we already send it in a seperate key
+  * test: add complete response tests
+  * Update package.json
+
 3.2.0 / 2015-02-18
 ==================
 
