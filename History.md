@@ -1,4 +1,9 @@
 
+4.0.0 / 2016-06-06
+==================
+
+  * Upgrade Analytics-Events to V2 to support our v2 spec.
+
 3.2.1 / 2016-03-21
 ==================
 
