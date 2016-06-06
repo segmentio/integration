@@ -9,7 +9,7 @@
     "url": "git://github.com/segmentio/integration.git"
   },
   "dependencies": {
-    "analytics-events": "1.x",
+    "analytics-events": "^2.0.2",
     "batch": "^0.5.1",
     "debug": "~0.7.4",
     "methods": "0.0.1",
