@@ -1,4 +1,10 @@
 
+4.0.1 / 2016-08-19
+==================
+
+  * adding ability to set ca
+  * changed request to return res and req
+
 4.0.0 / 2016-06-06
 ==================
 
