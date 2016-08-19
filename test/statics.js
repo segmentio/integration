@@ -140,4 +140,13 @@ describe('statics', function(){
       assert.equal('my-testio', test.slug());
     });
   });
+
+  describe('#ca', function(){
+    it('should allow you to set the list of cs', function(){
+      var test = integration('test');
+      test.ca(['foo']);
+      var req = test().request();
+      assert.deepEqual(req._ca, ['foo']);
+    });
+  });
 })
