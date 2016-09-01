@@ -735,6 +735,45 @@ describe('proto', function(){
       assert(false == segment.retry(new TypeError('whoops')));
     });
   });
+
+  describe('.enabled()', function(){
+    var Test = integration('test').server();
+    var test = Test({});
+
+    it('should return true when sent on a supported channel', function(){
+      var facade = new Page({ channel: 'server' });
+      assert.strictEqual(test.enabled(facade), true);
+    });
+
+    it('should return false when sent on an unsupported channel', function(){
+      var facade = new Page({ channel: 'client' });
+      assert.strictEqual(test.enabled(facade), false);
+    });
+
+    it('should return false when this integration is disabled for this message', function(){
+      var facade = new Page({ channel: 'server', integrations: { test: false } });
+      assert.strictEqual(test.enabled(facade), false);
+    });
+
+    it('should return true when channel is `client` and integration is listed as unbundled', function(){
+      var facade = new Page({ channel: 'client', _metadata: { bundled: [], unbundled: ['test'] } });
+      assert.strictEqual(test.enabled(facade), true);
+    });
+
+    it('should return false when this integration is unbundled and disabled for this message', function(){
+      var facade = new Page({
+        channel: 'client',
+        integrations: { test: false },
+        _metadata: { bundled: [], unbundled: ['test'] }
+      });
+      assert.strictEqual(test.enabled(facade), false);
+    });
+
+    it('should return false when channel is not supported and bundled metadata is not included', function(){
+      var facade = new Page({ channel: 'client' });
+      assert.strictEqual(test.enabled(facade), false);
+    });
+  });
 });
 
 /**
