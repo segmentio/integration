@@ -26,7 +26,7 @@ clean:
 lint:
 	@$(JSCS) $(SRCS) $(TESTS)
 
-test: lint
+test: node_modules lint
 	@$(MOCHA) \
 		--reporter spec \
 		--inline-diffs \
