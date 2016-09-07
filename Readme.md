@@ -1,10 +1,8 @@
-
-[![Build Status](https://travis-ci.org/segmentio/integration.svg?branch=master)](https://travis-ci.org/segmentio/integration)
-
 # segmentio-integration
 
-  Segment integration base prototype.
-  
+[![Circle CI](https://circleci.com/gh/segmentio/integration.svg?style=svg&circle-token=44d2f32e739758cfa078893341f88d5f744e1757)](https://circleci.com/gh/segmentio/integration)
+
+Segment integration base prototype.
   
 ## Integrating with Segment
 
