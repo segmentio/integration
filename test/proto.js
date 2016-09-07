@@ -685,8 +685,24 @@ describe('proto', function(){
   });
 
   describe('.retry(err)', function(){
+    it('200', function(){
+      assert(false == segment.retry({ status: 200 }));
+    });
+
+    it('404', function(){
+      assert(false == segment.retry({ status: 404 }));
+    });
+
+    it('429', function(){
+      assert(true == segment.retry({ status: 429 }));
+    });
+
     it('500', function(){
       assert(true == segment.retry({ status: 500 }));
+    });
+
+    it('501', function(){
+      assert(false == segment.retry({ status: 501 }));
     });
 
     it('502', function(){
@@ -699,10 +715,6 @@ describe('proto', function(){
 
     it('504', function(){
       assert(true == segment.retry({ status: 504 }));
-    });
-
-    it('429', function(){
-      assert(true == segment.retry({ status: 429 }));
     });
 
     it('ECONNRESET', function(){
@@ -729,10 +741,10 @@ describe('proto', function(){
       assert(true == segment.retry({ code: 'ENOTFOUND' }));
     });
 
-    it('should not error on other errors', function(){
-      assert(false == segment.retry({}));
-      assert(false == segment.retry(new Error('whoops')));
-      assert(false == segment.retry(new TypeError('whoops')));
+    it('should error on other errors', function(){
+      assert(true == segment.retry({}));
+      assert(true == segment.retry(new Error('whoops')));
+      assert(true == segment.retry(new TypeError('whoops')));
     });
   });
 
