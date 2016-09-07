@@ -21,7 +21,6 @@
     "uniq-component": "^1.0.0"
   },
   "devDependencies": {
-    "batch": "^0.5.1",
     "jscs": "^1.11.3",
     "mocha": "~1.17.1",
     "redis": "^0.12.1",
