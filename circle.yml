@@ -1,8 +1,12 @@
 machine:
+  services:
+    - docker
   node:
     version: 0.10.46
-  services:
-    - redis
+
+dependencies:
+  pre:
+    - docker-compose up -d
 
 test:
   override:
