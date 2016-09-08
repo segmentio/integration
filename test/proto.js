@@ -218,18 +218,16 @@ describe('proto', function(){
 
     it('should set the user-agent', function(){
       var req = segment.request('post');
-      var header = req.req._headers;
-      assert.equal('Segment.io/1.0', header['user-agent']);
+      assert.equal(req.header['User-Agent'], 'Segment.io/1.0');
       req.abort();
       req.end(function(){});
     });
 
     it('should be able to override the default user agent', function(){
       var req = segment.request('post');
-      var header = req.req._headers;
-      assert.equal('Segment.io/1.0', header['user-agent']);
+      assert.equal(req.header['User-Agent'], 'Segment.io/1.0');
       req.set('User-Agent', 'some-agent');
-      assert.equal('some-agent', header['user-agent']);
+      assert.equal(req.header['User-Agent'], 'some-agent');
       req.abort();
       req.end(function(){});
     });
