@@ -2,12 +2,22 @@
   "name": "segmentio-integration",
   "version": "4.0.1",
   "description": "Segment.io integration base prototype",
+  "main": "lib/integration.js",
   "keywords": [],
   "author": "Segment.io <friends@segment.io>",
+  "scripts": {
+    "test": "make test"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/segmentio/integration.git"
   },
+  "author": "Segment <friends@segment.com>",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/segmentio/integration/issues"
+  },
+  "homepage": "https://github.com/segmentio/integration#readme",
   "dependencies": {
     "@ndhoule/includes": "^2.0.1",
     "analytics-events": "^2.0.2",
@@ -25,6 +35,5 @@
     "mocha": "^3.0.2",
     "redis": "^0.12.1",
     "segmentio-facade": "2.x"
-  },
-  "main": "lib/integration"
+  }
 }
