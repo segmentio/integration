@@ -15,14 +15,14 @@
     "debug": "~0.7.4",
     "methods": "0.0.1",
     "ms": "~0.6.2",
-    "superagent": "^0.21.0",
+    "superagent": "^2.2.0",
     "to-no-case": "^0.1.2",
     "type": "git://github.com/segmentio/type",
     "uniq-component": "^1.0.0"
   },
   "devDependencies": {
     "jscs": "^1.11.3",
-    "mocha": "~1.17.1",
+    "mocha": "^3.0.2",
     "redis": "^0.12.1",
     "segmentio-facade": "2.x"
   },

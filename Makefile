@@ -30,7 +30,7 @@ test: node_modules lint
 	@$(MOCHA) \
 		--reporter spec \
 		--inline-diffs \
-		--grep $(GREP) \
+		--grep "$(GREP)" \
 		$(TESTS)
 
 #
