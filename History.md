@@ -1,4 +1,13 @@
 
+5.0.0 / 2016-09-08
+==================
+
+  * Add Redis Docker container as development dependency (#74)
+  * Update superagent to 2.x to fix uncaught TypeError bug (#73)
+  * Remove TravisCI, add CircleCI (#72)
+  * Retry all non-HTTP errors (#71)
+  * Have server-side integrations handle messages for unbundled analytics.js integrations (#70)
+
 4.0.1 / 2016-08-19
 ==================
 

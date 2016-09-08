@@ -1,6 +1,6 @@
 {
   "name": "segmentio-integration",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "Segment.io integration base prototype",
   "main": "lib/integration.js",
   "keywords": [],
