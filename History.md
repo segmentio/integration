@@ -1,4 +1,9 @@
 
+5.0.1 / 2016-09-19
+==================
+
+  * Allow empty array as a valid setting. Remove npm@2 requirement (#76)
+
 5.0.0 / 2016-09-08
 ==================
 
