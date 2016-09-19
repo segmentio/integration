@@ -4,7 +4,7 @@
   "description": "Segment.io integration base prototype",
   "main": "lib/integration.js",
   "keywords": [],
-  "author": "Segment.io <friends@segment.io>",
+  "author": "Segment <friends@segment.com>",
   "scripts": {
     "test": "make test"
   },
@@ -12,17 +12,16 @@
     "type": "git",
     "url": "git://github.com/segmentio/integration.git"
   },
-  "author": "Segment <friends@segment.com>",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/segmentio/integration/issues"
   },
   "homepage": "https://github.com/segmentio/integration#readme",
   "dependencies": {
-    "@ndhoule/includes": "^2.0.1",
     "analytics-events": "^2.0.2",
     "batch": "^0.5.1",
     "debug": "~0.7.4",
+    "lodash": "^4.16.0",
     "methods": "0.0.1",
     "ms": "~0.6.2",
     "superagent": "^2.2.0",
