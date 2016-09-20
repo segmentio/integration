@@ -27,7 +27,8 @@
     "superagent": "^2.2.0",
     "to-no-case": "^0.1.2",
     "type": "git://github.com/segmentio/type",
-    "uniq-component": "^1.0.0"
+    "uniq-component": "^1.0.0",
+    "statuses": "^1.2.1"
   },
   "devDependencies": {
     "jscs": "^1.11.3",
