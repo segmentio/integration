@@ -90,6 +90,27 @@ describe('lock', function(){
     });
   });
 
+  describe('with timed lock', function(){
+    it('should return errors for any locks already aquired', function(done){
+      var batch = new Batch;
+      segment.track = withTimedLock;
+
+      msgs.forEach(function(msg){
+        batch.push(function(done){
+          segment.track(msg, done);
+        });
+      });
+
+      batch.end(function(err){
+        if (err) assert(err.code == 'RESOURCE_LOCKED');
+        db.hgetall('users', function(err, vals){
+          assert.deepEqual(vals, { 1: 'a', 2: 'e' });
+          done();
+        });
+      });
+    });
+  });
+
   function withoutLock(msg, done){
     db.hget('users', msg.userId(), function(err, val){
       if (err) return done(err);
@@ -101,6 +122,22 @@ describe('lock', function(){
   function withLock(msg, done){
     var self = this;
     this.lock(msg.userId(), function(err){
+      if (err) return done();
+      db.hget('users', msg.userId(), function(err, value){
+        if (err) return self.unlock(msg.userId(), done);
+        if (value) return self.unlock(msg.userId(), done);
+        db.hset('users', msg.userId(), msg.event(), function(err){
+          self.unlock(msg.userId(), function(){
+            done(err);
+          });
+        });
+      });
+    });
+  }
+
+  function withTimedLock(msg, done){
+    var self = this;
+    this.lock(msg.userId(), 30000, function(err){
       if (err) return done();
       db.hget('users', msg.userId(), function(err, value){
         if (err) return self.unlock(msg.userId(), done);
