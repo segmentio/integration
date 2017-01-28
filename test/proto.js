@@ -223,6 +223,13 @@ describe('proto', function(){
       req.end(function(){});
     });
 
+    it('should set the Accept-Encoding header', function(){
+      var req = segment.request('post');
+      assert.equal(req.header['Accept-Encoding'], 'identity');
+      req.abort();
+      req.end(function(){});
+    });
+
     it('should be able to override the default user agent', function(){
       var req = segment.request('post');
       assert.equal(req.header['User-Agent'], 'Segment.io/1.0');
