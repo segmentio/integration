@@ -320,6 +320,13 @@ describe('proto', function(){
       test({}).track(msg, done);
     });
 
+    it('should map a spec\'d event if mapper[specdEvent] is defined', function(done){
+      var test = integration('test').mapper({ orderCompleted: mapper() });
+      test.prototype.orderCompleted = mapper.test(done);
+      var msg = helpers.track({ event: 'Order Completed' });
+      test({}).track(msg, done);
+    });
+
     it('should call .productViewed when the event is /viewed[ _]?product/i', function(){
       var track = helpers.track;
       segment.productViewed = spy();
