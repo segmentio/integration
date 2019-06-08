@@ -13,7 +13,7 @@
  * to the company.
  */
 
-var integration = require('..');
+var integration = require('..')
 
 /**
  * Expose `Example`
@@ -23,7 +23,7 @@ var Example = module.exports = integration('Example')
   .channels(['server', 'mobile', 'client'])
   .endpoint('https://localhost:3000')
   .ensure('message.userId')
-  .retries(2);
+  .retries(2)
 
 /**
  * Identify.
@@ -33,14 +33,14 @@ var Example = module.exports = integration('Example')
  * @api public
  */
 
-Example.prototype.identify = function(msg, fn){
+Example.prototype.identify = function (msg, fn) {
   return this
     .post('/identify')
     .send({ id: msg.userId() })
     .send({ traits: msg.traits() })
     .send({ companyId: msg.proxy('traits.company.id') })
-    .end(this.handle(fn));
-};
+    .end(this.handle(fn))
+}
 
 /**
  * Group.
@@ -51,17 +51,17 @@ Example.prototype.identify = function(msg, fn){
  * @param {Function} fn
  */
 
-Example.prototype.group = function(msg, fn){
-  var self = this;
+Example.prototype.group = function (msg, fn) {
+  var self = this
   this
     .post('/company')
     .send({ id: msg.groupId() })
     .send({ traits: msg.traits() })
-    .end(this.handle(function(err){
-      if (err) return fn(err);
-      self.identify(toIdentify(msg), fn);
-    }));
-};
+    .end(this.handle(function (err) {
+      if (err) return fn(err)
+      self.identify(toIdentify(msg), fn)
+    }))
+}
 
 /**
  * Turn a `Group` to `Identify`.
@@ -70,10 +70,10 @@ Example.prototype.group = function(msg, fn){
  * @return {Identify}
  */
 
-function toIdentify(msg){
-  var json = msg.json();
-  json.userId = msg.userId();
-  json.traits = {};
-  json.traits.company = { id: msg.groupId() };
-  return new Identify(json);
+function toIdentify (msg) {
+  var json = msg.json()
+  json.userId = msg.userId()
+  json.traits = {}
+  json.traits.company = { id: msg.groupId() }
+  return new Identify(json)
 }

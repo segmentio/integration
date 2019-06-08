@@ -3,7 +3,7 @@
  * Module dependencies.
  */
 
-var integration = require('..');
+var integration = require('..')
 
 /**
  * Expose `Example`
@@ -13,7 +13,7 @@ var Example = module.exports = integration('Example')
   .channels(['server', 'mobile', 'client'])
   .endpoint('http://localhost:3000')
   .mapping('events')
-  .retries(2);
+  .retries(2)
 
 /**
  * Track.
@@ -32,14 +32,14 @@ var Example = module.exports = integration('Example')
  * @param {Function} fn
  */
 
-Example.prototype.track = function(msg, fn){
-  var actions = this.events(msg.event());
+Example.prototype.track = function (msg, fn) {
+  var actions = this.events(msg.event())
 
-  if (!actions.length) return process.nextTick(fn);
+  if (!actions.length) return process.nextTick(fn)
 
   return this
     .post('/events')
     .send({ actions: actions })
     .send({ userId: msg.userId() })
-    .end(this.handle(fn));
-};
+    .end(this.handle(fn))
+}

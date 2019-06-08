@@ -3,7 +3,7 @@
  * Module dependencies.
  */
 
-var integration = require('..');
+var integration = require('..')
 
 /**
  * Expose `Example`
@@ -14,7 +14,7 @@ var Example = module.exports = integration('Example')
   .endpoint('http://localhost:3000')
   .ensure('settings.appId')
   .ensure('message.userId')
-  .retries(2);
+  .retries(2)
 
 /**
  * Identify.
@@ -32,18 +32,18 @@ var Example = module.exports = integration('Example')
  * @param {Function} fn
  */
 
-Example.prototype.identify = function(msg, fn){
-  var key = [this.settings.appId, msg.userId()].join(':');
-  var self = this;
-  this.lock(key, function(){
+Example.prototype.identify = function (msg, fn) {
+  var key = [this.settings.appId, msg.userId()].join(':')
+  var self = this
+  this.lock(key, function () {
     return self
       .post('/users')
       .type('json')
       .send(msg.json())
-      .end(self.handle(function(err, res){
-        self.unlock(key, function(){
-          fn(err, res);
-        });
-      }));
-  });
-};
+      .end(self.handle(function (err, res) {
+        self.unlock(key, function () {
+          fn(err, res)
+        })
+      }))
+  })
+}
