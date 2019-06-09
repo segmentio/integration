@@ -1,3 +1,10 @@
+6.0.0 / 2019-06-09
+==================
+
+  * Deprecate `.logger` method
+  * Add `.origin` property and set to 'DESTINATION' for all errors returned from partner API
+  * Add support for using `.lock` with async/await or callbacks
+
 
 5.0.1 / 2016-09-19
 ==================
