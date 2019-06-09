@@ -8,7 +8,7 @@ describe('integration', function () {
       try {
         integration()
       } catch (e) {
-        assert(e.message == 'expected integration name')
+        assert(e.message === 'expected integration name')
         done()
       }
     })
@@ -30,7 +30,7 @@ describe('integration', function () {
     })
 
     it('should set the .name', function () {
-      assert(Test().name == 'Test')
+      assert(Test().name === 'Test')
     })
 
     it('should inherit emitter', function (done) {
@@ -45,7 +45,7 @@ describe('integration', function () {
 
     it('should call .initialize()', function (done) {
       Test.prototype.initialize = done
-      new Test()
+      new Test() // eslint-disable-line
     })
 
     it('should expose `name` on .prototype', function () {

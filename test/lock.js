@@ -7,8 +7,8 @@ var Batch = require('batch')
 
 describe('lock', function () {
   var segment
-  var api
   var db
+  var msgs
 
   beforeEach(function (done) {
     db = redis.createClient()
@@ -23,7 +23,7 @@ describe('lock', function () {
     segment.redis(db)
   })
 
-  beforeEach(function (done) {
+  afterEach(function (done) {
     db.del('users', done)
   })
 
@@ -39,7 +39,7 @@ describe('lock', function () {
   })
 
   it('should prefix with the integration name', function (done) {
-    segment.lock('some-key', function (err) {
+    segment.lock('some-key', function () {
       db.exists('Segment.io:some-key', function (err, exists) {
         if (err || !exists) return done(err || new Error('expected key to exists'))
         segment.unlock('some-key', done)
@@ -81,8 +81,8 @@ describe('lock', function () {
       })
 
       batch.end(function (err) {
-        if (err) assert(err.code == 'RESOURCE_LOCKED')
-        db.hgetall('users', function (err, vals) {
+        if (err) assert(err.code === 'RESOURCE_LOCKED')
+        db.hgetall('users', function (_, vals) {
           assert.deepEqual(vals, { 1: 'a', 2: 'e' })
           done()
         })
@@ -102,8 +102,8 @@ describe('lock', function () {
       })
 
       batch.end(function (err) {
-        if (err) assert(err.code == 'RESOURCE_LOCKED')
-        db.hgetall('users', function (err, vals) {
+        if (err) assert(err.code === 'RESOURCE_LOCKED')
+        db.hgetall('users', function (_, vals) {
           assert.deepEqual(vals, { 1: 'a', 2: 'e' })
           done()
         })

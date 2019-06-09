@@ -17,7 +17,7 @@ describe('errors', function () {
     })
 
     it('should not error without context', function () {
-      var err = new BadRequest('error', 'Segment')
+      new BadRequest('error', 'Segment') // eslint-disable-line
     })
   })
 
@@ -25,6 +25,7 @@ describe('errors', function () {
     it('should expose .stack', function () {
       var err = new ValidationError('.key is required', 'Segment')
       assert.equal('INVALID_SETTINGS', err.code)
+      assert.equal(400, err.status)
       assert.equal('.key is required', err.message)
     })
   })
@@ -47,10 +48,19 @@ describe('errors', function () {
     assert.equal('Segment', err.integration)
   })
 
+  describe('.reject(msg)', function () {
+    var Segment = integration('Segment')
+    var err = Segment.reject('message')
+    assert.equal('MESSAGE_REJECTED', err.code)
+    assert.equal('message', err.message)
+    assert.equal('Segment', err.integration)
+    assert.equal(400, err.status)
+  })
+
   describe('.invalid(msg)', function () {
     it('should return invalid settings error', function () {
       var Segment = integration('Segment')
-      var err = Segment.invalid('error')
+      Segment.invalid('error')
     })
   })
 })

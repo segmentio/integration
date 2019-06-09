@@ -6,7 +6,6 @@ var helpers = require('./support')
 var request = require('superagent')
 var methods = require('methods')
 var integration = require('..')
-var errors = integration.errors
 var assert = require('assert')
 var http = require('http')
 
@@ -52,9 +51,9 @@ describe('proto', function () {
     it('should call #wrapMethods() after #initialize', function () {
       var track = spy()
       Segment.prototype.track = track
-      Segment.prototype.initialize = function () { assert(track == this.track) }
+      Segment.prototype.initialize = function () { assert(track === this.track) }
       var s = Segment()
-      assert(track != s.track)
+      assert(track !== s.track)
     })
   })
 
@@ -125,7 +124,7 @@ describe('proto', function () {
   describe('.jstrace()', function () {
     it('should return noop', function () {
       var fn = segment.jstrace()
-      assert.equal(fn.toString(), function noop () {}.toString())
+      assert.equal(fn.name, 'noop')
     })
 
     it('should set ._trace', function () {
@@ -162,23 +161,11 @@ describe('proto', function () {
     it('should set / get redis', function () {
       var client = {}
       segment.redis(client)
-      assert(client == segment.redis())
+      assert(client === segment.redis())
     })
 
     it('should return the integration when setting redis', function () {
-      assert(segment == segment.redis({}))
-    })
-  })
-
-  describe('.logger()', function () {
-    it('should set / get logger', function () {
-      var logger = {}
-      segment.logger(logger)
-      assert(logger == segment.logger())
-    })
-
-    it('should return the integration when setting logger', function () {
-      assert(segment == segment.logger({}))
+      assert(segment === segment.redis({}))
     })
   })
 
@@ -243,12 +230,12 @@ describe('proto', function () {
       var req = segment.request('get', '/get')
       req.end(function (err, res) { done(err, res) })
       segment.on('request', function (request) {
-        assert(req == request)
+        assert(req === request)
       })
     })
 
     it('should emit `response` after response', function (done) {
-      var req = segment.request('get', '/get').end(function () {})
+      segment.request('get', '/get').end(function () {})
       segment.on('response', function (res) {
         assert(res)
         assert(res.header)
@@ -268,11 +255,11 @@ describe('proto', function () {
   })
 
   methods.forEach(function (method) {
-    var name = method == 'delete' ? 'del' : method
-    if (method == 'search') return
-    if (method == 'trace') return
-    if (method == 'lock') return
-    if (method == 'unlock') return
+    var name = method === 'delete' ? 'del' : method
+    if (method === 'search') return
+    if (method === 'trace') return
+    if (method === 'lock') return
+    if (method === 'unlock') return
     describe(fmt('.%s()', name), function () {
       it(fmt('should return %s request', method), function () {
         var req = segment[name]()
@@ -308,7 +295,7 @@ describe('proto', function () {
         ctx = this
       }
 
-      assert(ctx == test)
+      assert(ctx === test)
     })
   })
 
@@ -438,7 +425,6 @@ describe('proto', function () {
 
     it('should apply arguments to methods', function (done) {
       var msg = helpers.track({ event: 'Order Completed' })
-      var settings = {}
       segment.orderCompleted = spy()
       segment.track(msg, done)
       var args = segment.orderCompleted.args[0]
@@ -691,104 +677,119 @@ describe('proto', function () {
 
   describe('.retry(err)', function () {
     it('200', function () {
-      assert(segment.retry({ status: 200 }) == false)
+      assert(segment.retry({ status: 200 }) === false)
     })
 
     it('404', function () {
-      assert(segment.retry({ status: 404 }) == false)
+      assert(segment.retry({ status: 404 }) === false)
     })
 
     it('429', function () {
-      assert(segment.retry({ status: 429 }) == true)
+      assert(segment.retry({ status: 429 }) === true)
     })
 
     it('500', function () {
-      assert(segment.retry({ status: 500 }) == true)
+      assert(segment.retry({ status: 500 }) === true)
     })
 
     it('501', function () {
-      assert(segment.retry({ status: 501 }) == false)
+      assert(segment.retry({ status: 501 }) === false)
     })
 
     it('502', function () {
-      assert(segment.retry({ status: 502 }) == true)
+      assert(segment.retry({ status: 502 }) === true)
     })
 
     it('503', function () {
-      assert(segment.retry({ status: 503 }) == true)
+      assert(segment.retry({ status: 503 }) === true)
     })
 
     it('504', function () {
-      assert(segment.retry({ status: 504 }) == true)
+      assert(segment.retry({ status: 504 }) === true)
     })
 
     it('ECONNRESET', function () {
-      assert(segment.retry({ code: 'ECONNRESET' }) == true)
+      assert(segment.retry({ code: 'ECONNRESET' }) === true)
     })
 
     it('ECONNREFUSED', function () {
-      assert(segment.retry({ code: 'ECONNREFUSED' }) == true)
+      assert(segment.retry({ code: 'ECONNREFUSED' }) === true)
     })
 
     it('ECONNABORTED', function () {
-      assert(segment.retry({ code: 'ECONNABORTED' }) == true)
+      assert(segment.retry({ code: 'ECONNABORTED' }) === true)
     })
 
     it('ETIMEDOUT', function () {
-      assert(segment.retry({ code: 'ETIMEDOUT' }) == true)
+      assert(segment.retry({ code: 'ETIMEDOUT' }) === true)
     })
 
     it('EADDRINFO', function () {
-      assert(segment.retry({ code: 'EADDRINFO' }) == true)
+      assert(segment.retry({ code: 'EADDRINFO' }) === true)
     })
 
     it('ENOTFOUND', function () {
-      assert(segment.retry({ code: 'ENOTFOUND' }) == true)
+      assert(segment.retry({ code: 'ENOTFOUND' }) === true)
     })
 
     it('should error on other errors', function () {
-      assert(segment.retry({}) == true)
-      assert(segment.retry(new Error('whoops')) == true)
-      assert(segment.retry(new TypeError('whoops')) == true)
+      assert(segment.retry({}) === true)
+      assert(segment.retry(new Error('whoops')) === true)
+      assert(segment.retry(new TypeError('whoops')) === true)
     })
   })
 
   describe('.enabled()', function () {
     var Test = integration('test').server()
     var test = Test({})
+    const err = new Error('this message was sent client side')
+    err.status = 'MESSAGE_SENT_CLIENT_SIDE'
 
-    it('should return true when sent on a supported channel', function () {
+    it('should return empty when sent on a supported channel', function () {
       var facade = new Page({ channel: 'server' })
-      assert.strictEqual(test.enabled(facade), true)
+      assert.strictEqual(test.enabled(facade), undefined)
     })
 
-    it('should return false when sent on an unsupported channel', function () {
+    it('should return an error when sent on an unsupported channel', function () {
       var facade = new Page({ channel: 'client' })
-      assert.strictEqual(test.enabled(facade), false)
+      var enabledErr = test.enabled(facade)
+      assert.strictEqual(enabledErr.message, 'this message was sent client side')
+      assert.strictEqual(enabledErr.status, 'MESSAGE_SENT_CLIENT_SIDE')
     })
 
-    it('should return false when this integration is disabled for this message', function () {
+    it('should return an error when this integration is disabled for this message', function () {
       var facade = new Page({ channel: 'server', integrations: { test: false } })
-      assert.strictEqual(test.enabled(facade), false)
+      var enabledErr = test.enabled(facade)
+      assert.strictEqual('test has been explicitly disabled in the event payload in the `integrations` object.', enabledErr.message)
+      assert.strictEqual(enabledErr.code, 'MESSAGE_REJECTED')
     })
 
-    it('should return true when channel is `client` and integration is listed as unbundled', function () {
+    it('should return empty when `replay` is true', function () {
+      var facade = new Page({ replay: true, channel: 'client', _metadata: { bundled: ['test'], unbundled: [] } })
+      assert.strictEqual(test.enabled(facade), undefined)
+    })
+
+    it('should return empty when channel is `client` and integration is listed as unbundled', function () {
       var facade = new Page({ channel: 'client', _metadata: { bundled: [], unbundled: ['test'] } })
-      assert.strictEqual(test.enabled(facade), true)
+      assert.strictEqual(test.enabled(facade), undefined)
     })
 
-    it('should return false when this integration is unbundled and disabled for this message', function () {
+    it('should return an error when this integration is unbundled and disabled for this message', function () {
       var facade = new Page({
         channel: 'client',
         integrations: { test: false },
         _metadata: { bundled: [], unbundled: ['test'] }
       })
-      assert.strictEqual(test.enabled(facade), false)
+      var enabledErr = test.enabled(facade)
+      assert.strictEqual(enabledErr.message, 'test has been explicitly disabled in the event payload in the `integrations` object.')
+      assert.strictEqual(enabledErr.code, 'MESSAGE_REJECTED')
     })
 
-    it('should return false when channel is not supported and bundled metadata is not included', function () {
+    it('should return an error when channel is not supported and bundled metadata is not included', function () {
       var facade = new Page({ channel: 'client' })
-      assert.strictEqual(test.enabled(facade), false)
+      var enabledErr = test.enabled(facade)
+      assert.strictEqual(enabledErr.message, 'this message was sent client side')
+      assert.strictEqual(enabledErr.status, 'MESSAGE_SENT_CLIENT_SIDE')
     })
   })
 })
@@ -811,7 +812,7 @@ function mapper () {
 
 mapper.test = function (done) {
   return function (payload, fn) {
-    assert(payload.settings == this.settings)
+    assert(payload.settings === this.settings)
     assert(payload.msg)
     assert.equal('function', typeof fn)
     done()

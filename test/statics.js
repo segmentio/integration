@@ -1,7 +1,5 @@
 
-var Identify = require('segmentio-facade').Identify
 var helpers = require('./support')
-var fmt = require('util').format
 var integration = require('..')
 var assert = require('assert')
 var http = require('http')
@@ -10,7 +8,7 @@ describe('statics', function () {
   describe('.endpoint()', function () {
     it('should set the endpoint', function () {
       var test = integration('test').endpoint('test')
-      assert(test().endpoint == 'test')
+      assert(test().endpoint === 'test')
     })
   })
 
@@ -28,7 +26,7 @@ describe('statics', function () {
       var segment = new Segment({ events: { a: 'd2ecbc98' } })
       assert.deepEqual(['d2ecbc98'], segment.events('a'))
       assert.deepEqual(['d2ecbc98'], segment.events('A'))
-      var segment = new Segment({ events: [{ key: 'a', value: 'd2ecbc98' }, { key: 'a', value: 'c18f536e' }] })
+      segment = new Segment({ events: [{ key: 'a', value: 'd2ecbc98' }, { key: 'a', value: 'c18f536e' }] })
       assert.deepEqual(['d2ecbc98', 'c18f536e'], segment.events('a'))
     })
   })
@@ -38,7 +36,7 @@ describe('statics', function () {
       var mapper = {}
       var test = integration('segment')
       test.mapper(mapper)
-      assert(mapper == test().mapper)
+      assert(mapper === test().mapper)
     })
   })
 
@@ -46,13 +44,15 @@ describe('statics', function () {
     it('should be enabled on client too', function () {
       var test = integration('test').client()()
       var t = helpers.track({ channel: 'client' })
-      assert(test.enabled(t, {}))
+      assert.equal(test.enabled(t, {}), undefined)
     })
 
     it('should not be enabled on mobile', function () {
       var test = integration('test').client()()
       var t = helpers.track({ channel: 'mobile' })
-      assert(!test.enabled(t, {}))
+      const enabledErr = test.enabled(t, {})
+      assert.equal(enabledErr.message, 'this message was sent client side')
+      assert.equal(enabledErr.status, 'MESSAGE_SENT_CLIENT_SIDE')
     })
   })
 
@@ -64,8 +64,8 @@ describe('statics', function () {
       test.client()
       test.mobile()
       test = test()
-      assert(test.enabled(a, {}))
-      assert(test.enabled(b, {}))
+      assert.equal(test.enabled(a, {}), undefined)
+      assert.equal(test.enabled(b, {}), undefined)
     })
   })
 
@@ -89,7 +89,7 @@ describe('statics', function () {
       var length = test.prototype.channels.length
       test.channel('b')
       test.channel('b')
-      assert(length + 1 == test.prototype.channels.length)
+      assert(length + 1 === test.prototype.channels.length)
     })
   })
 
