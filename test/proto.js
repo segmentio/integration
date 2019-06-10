@@ -29,7 +29,6 @@ describe('proto', function () {
   beforeEach(function () {
     Segment = integration('Segment.io')
       .endpoint('http://localhost:' + server.address().port)
-      .mapper({})
 
     Segment.prototype.page = tick
     Segment.prototype.track = tick
@@ -277,36 +276,7 @@ describe('proto', function () {
     })
   })
 
-  describe('.identify(identify, fn)', function () {
-    it('should map identify if mapper.identify is defined', function (done) {
-      var test = integration('test').mapper({ identify: mapper() })
-      test.prototype.identify = mapper.test(done)
-      test({}).identify({}, done)
-    })
-
-    it('should call the mapper with the correct context', function () {
-      var Test = integration('test').mapper({ track: track })
-      Test.prototype.track = function () {}
-      var test = Test()
-      test.track(helpers.track())
-      var ctx
-
-      function track () {
-        ctx = this
-      }
-
-      assert(ctx === test)
-    })
-  })
-
   describe('.track(track, fn)', function () {
-    it('should map track if mapper.track is defined', function (done) {
-      var test = integration('test').mapper({ track: mapper() })
-      test.prototype.track = mapper.test(done)
-      var msg = helpers.track()
-      test({}).track(msg, done)
-    })
-
     it('should call .productViewed when the event is /viewed[ _]?product/i', function () {
       var track = helpers.track
       segment.productViewed = spy()
@@ -482,12 +452,6 @@ describe('proto', function () {
       })
     })
 
-    it('should map page if mapper.page is defined', function (done) {
-      var test = integration('test').mapper({ page: mapper() })
-      test.prototype.page = mapper.test(done)
-      test().page({}, done)
-    })
-
     it('should send "Loaded a Page" if .trackAllPages is true', function (done) {
       segment.settings.trackAllPages = true
       segment.page(page, function (err) {
@@ -590,12 +554,6 @@ describe('proto', function () {
       })
     })
 
-    it('should map screen if mapper.screen is defined', function (done) {
-      var test = integration('test').mapper({ screen: mapper() })
-      test.prototype.screen = mapper.test(done)
-      test().screen({}, done)
-    })
-
     it('should send "Loaded a Screen" if .trackAllPages is true', function (done) {
       segment.settings.trackAllPages = true
       segment.screen(screen, function (err) {
@@ -665,13 +623,6 @@ describe('proto', function () {
         assert.equal(tracks[2].event(), 'Viewed Docs Integration Screen')
         done()
       })
-    })
-  })
-  describe('.group(group, fn)', function () {
-    it('should map group if mapper.group is defined', function (done) {
-      var test = integration('test').mapper({ group: mapper() })
-      test.prototype.group = mapper.test(done)
-      test().group({}, done)
     })
   })
 

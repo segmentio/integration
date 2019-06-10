@@ -31,15 +31,6 @@ describe('statics', function () {
     })
   })
 
-  describe('.mapper(obj)', function () {
-    it('should set the mapper correctly', function () {
-      var mapper = {}
-      var test = integration('segment')
-      test.mapper(mapper)
-      assert(mapper === test().mapper)
-    })
-  })
-
   describe('.client()', function () {
     it('should be enabled on client too', function () {
       var test = integration('test').client()()

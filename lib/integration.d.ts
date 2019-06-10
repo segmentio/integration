@@ -38,15 +38,6 @@ export interface IntegrationStatic<Settings extends object, Options extends obje
    */
   endpoint(endpoint: string): this
 
-  /**
-   * Define functions to use as `mapper` methods.
-   * If defined, all incoming events will first be passed into the appropriate mapper method
-   * and then those return values will be passed into the integration's event handlers.
-   * @param mapper
-   * @deprecated
-   */
-  mapper(mapper: object): this
-
   mapping(mapping: string): this
 
   /**
