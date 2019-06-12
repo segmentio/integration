@@ -1,4 +1,4 @@
-import * as core from './lib/integration'
+import * as core from './integration'
 
 declare function integration<T extends object, O extends object = { [key: string]: any }>(name: string): core.IntegrationStatic<T, O>
 

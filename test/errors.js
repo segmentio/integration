@@ -1,6 +1,6 @@
 
-var ValidationError = require('../lib/errors').ValidationError
-var BadRequest = require('../lib/errors').BadRequestError
+var ValidationError = require('../src/errors').ValidationError
+var BadRequest = require('../src/errors').BadRequestError
 var integration = require('..')
 var assert = require('assert')
 
