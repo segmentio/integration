@@ -1,19 +1,19 @@
 
-var Track = require('segmentio-facade').Track;
+var Track = require('segmentio-facade').Track
 
 /**
  * Track
  */
 
-exports.track = function(obj){
+exports.track = function (obj) {
   return new Track(merge({
     userId: 'id',
     event: 'event',
     properties: {},
-    timestamp: new Date,
+    timestamp: new Date(),
     channel: 'server'
-  }, obj));
-};
+  }, obj))
+}
 
 /**
  * Merge `a`, `b`.
@@ -22,8 +22,8 @@ exports.track = function(obj){
  * @param {Object} b
  */
 
-function merge(a, b){
-  b = b || {};
-  for (var k in b) a[k] = b[k];
-  return a;
+function merge (a, b) {
+  b = b || {}
+  for (var k in b) a[k] = b[k]
+  return a
 }

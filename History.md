@@ -1,3 +1,12 @@
+6.0.0 / 2019-06-09
+==================
+
+  * Remove use of __proto__ to facilitate inheritance. This pattern has been long deprecated and causes huge perfomance issues. See [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto) for more.
+  * Import code from internal Segment service which does the following:
+    * Deprecates `.logger` method
+    * Adds `.origin` property and set to 'DESTINATION' for all errors returned from partner API
+    * Adds support for using `.lock` with async/await or callbacks
+
 
 5.0.1 / 2016-09-19
 ==================

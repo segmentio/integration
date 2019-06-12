@@ -1,0 +1,67 @@
+version: 2
+jobs:
+  setup:
+    resource_class: small
+    docker:
+      - image: 528451384384.dkr.ecr.us-west-2.amazonaws.com/circleci-node:8.11
+    steps:
+      - checkout
+      - restore_cache:
+          key: deps-{{ checksum "yarn.lock" }}
+      - run:
+          name: Authenticate npm
+          command: npm config set "//registry.npmjs.org/:_authToken" $NPM_AUTH
+      - run:
+          name: Install Dependencies
+          command: yarn
+      - save_cache:
+          key: deps-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+      - persist_to_workspace:
+          root: .
+          paths: [.]
+
+  test:
+    resource_class: large
+    docker:
+      - image: 528451384384.dkr.ecr.us-west-2.amazonaws.com/circleci-node:8.11
+      - image: redis:2.8
+    steps:
+      - attach_workspace: { at: . }
+      - run: yarn run test
+
+  snyk:
+    docker:
+      - image: circleci/node:8.9
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - attach_workspace: { at: . }
+      - run:
+          name: Snyk Setup
+          command: curl -sL https://raw.githubusercontent.com/segmentio/snyk_helpers/master/initialization/snyk.sh | sh
+
+workflows:
+  version: 2
+  run:
+    jobs:
+      - setup:
+          context: segmentio-org-global
+          filters:
+            tags: { only: /.*/ }
+
+      - snyk:
+          requires: [setup]
+          context: snyk
+          filters:
+            tags: { only: /.*/ }
+            branches:
+              ignore:
+                - golden_live_test
+
+      - test:
+          requires: [setup]
+          context: segmentio-org-global
+          filters:
+            tags: { only: /.*/ }
