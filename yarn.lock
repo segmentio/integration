@@ -54,6 +54,11 @@
   resolved "https://registry.yarnpkg.com/@segment/isodate/-/isodate-1.0.3.tgz#f44e8202d5edd277ce822785239474b2c9411d4a"
   integrity sha512-BtanDuvJqnACFkeeYje7pWULVv8RgZaqKHWwGFnL/g/TH/CcZjkIVTfGDp/MAxmilYHUkrX70SqwnYSTNEaN7A==
 
+"@types/node@^12.0.8":
+  version "12.0.8"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.8.tgz#551466be11b2adc3f3d47156758f610bd9f6b1d8"
+  integrity sha512-b8bbUOTwzIY3V5vDTY1fIJ+ePKDUBqt2hC2woVGotdQQhG/2Sh62HOKHrT7ab+VerXAcPyAiTEipPu/FsreUtg==
+
 analytics-events@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/analytics-events/-/analytics-events-2.2.0.tgz#f00f55946940a6357809582f6fded6ab80034b84"
@@ -484,9 +489,9 @@ safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
   integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
 
-segmentio-facade@segmentio/facade#3.2.4:
-  version "3.2.4"
-  resolved "https://codeload.github.com/segmentio/facade/tar.gz/d34b978818debbdeb4fd19acd440253aca6e1551"
+segmentio-facade@segmentio/facade#3.2.6:
+  version "3.2.6"
+  resolved "https://codeload.github.com/segmentio/facade/tar.gz/0bbe22e274a60624704c241b75cf0f1b5af1b83d"
   dependencies:
     "@ndhoule/clone" "^1.0.0"
     "@segment/isodate-traverse" "^1.0.0"
