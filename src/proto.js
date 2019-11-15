@@ -230,9 +230,6 @@ function mockRequest (method, url, onEnd) {
       this.headers[header] = value
       return this
     },
-    query () {
-      return
-    },
     end (cb) {
       // But this will send the request back out to caller which
       // can then emit request for `service/index.js` to use for
