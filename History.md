@@ -1,3 +1,8 @@
+6.0.5 / 2019-11-14
+==================
+  * Add superagent mocking to enable QA
+    * Not all methods are mocked! Double check before relying on mocked requests  
+
 6.0.0 / 2019-06-09
 ==================
 

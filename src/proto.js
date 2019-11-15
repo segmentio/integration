@@ -15,6 +15,8 @@ var http = require('http')
 var https = require('https')
 const { isBoolean } = require('lodash')
 
+const IS_CANDIDATE = process.env.IS_CANDIDATE === 'true'
+
 /**
  * Retry checks.
  *
@@ -183,6 +185,65 @@ exports.unlock = async function (key, fn) {
 }
 
 /**
+ * Fake superagent request that doesn't actually send anything
+ * but just persists the request in memory for tracking.
+ * Later, for "chatty" destinations it can use control requests
+ * as its data source to give some responses.
+ */
+function mockRequest (method, url, onEnd) {
+  return {
+    method,
+    url,
+    onEnd,
+    headers: {
+      // Default headers.
+      'User-Agent': 'Segment.io/1.0',
+      'Accept-Encoding': 'identity',
+      'Content-Type': 'application/json'
+    },
+    // Current subset of functions here represents just what is necessary
+    // to make webhooks work.
+    post (url) {
+      this.url = url
+      return this
+    },
+    get (url) {
+      this.url = url
+      return this
+    },
+    redirects (redirects) {
+      this.redirects = redirects
+      return this
+    },
+    type (type) {
+      this.type = type
+      return this
+    },
+    send (body) {
+      this.body = body
+      return this
+    },
+    parse (ignore) {
+      return this
+    },
+    set (header, value) {
+      this.headers[header] = value
+      return this
+    },
+    query () {
+      return
+    },
+    end (cb) {
+      // But this will send the request back out to caller which
+      // can then emit request for `service/index.js` to use for
+      // request tracking.
+      this.onEnd(this)
+      cb()
+    }
+  }
+}
+
+/**
  * Create a new request with `method` and optional `path`.
  *
  * @param {String} method
@@ -197,6 +258,23 @@ exports.request = function (method, path) {
 
   if (!isAbsolute(url)) url = this.endpoint + url
   this.debug('create request %s', method, url)
+
+  if (IS_CANDIDATE) {
+    return mockRequest(method, url, (candidateRequest) => {
+      // This function will need to transform `candidateRequest` to look more like
+      // what superagent returns in the on request hook but that should be doable.
+      const { method, url, headers, body } = candidateRequest
+      self.emit('request', {
+        req: {
+          method: method.toUpperCase()
+        },
+        url,
+        qs: {},
+        header: headers,
+        _data: body
+      })
+    })
+  }
 
   var req = request[method](url)
   var end = req.end
