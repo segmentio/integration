@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -35,6 +34,7 @@ module.exports = function (integration) {
 
   // use mapper.
   methods.forEach(function (method) {
+    if (mapper[method] === 'batch') return
     if (!mapper[method] || !integration[method]) return // only wrap method if it is defined in both mapper and index
     var fn = integration[method]
     integration[method] = function (message, callback) {
@@ -43,6 +43,33 @@ module.exports = function (integration) {
       return fn.call(this, payload, callback)
     }
   })
+
+  if (integration['batch']) {
+    const batchFn = integration.batch
+    integration['batch'] = function (events, callback) {
+      // the batch mapper is called first so that the mapper has access to raw,
+      // unprocessed events before they're mapped by the type-specific mappers
+      let buckets = [events] // default there's one bucket
+      if (mapper['batch']) {
+        // if there's a batch mapper, get buckets from it
+        buckets = mapper['batch'].call(this, events, this.settings)
+      }
+
+      for (const bucket of buckets) {
+        // bounce all the events in each bucket against the type-specific mapper
+        const eventsToPass = bucket.map(ev => {
+          const method = ev.type()
+          if (mapper[method]) {
+            return mapper[method].call(this, ev, this.settings)
+          } else {
+            return ev.obj
+          }
+        })
+
+        batchFn.call(this, eventsToPass, callback)
+      }
+    }
+  }
 
   // route ecommerce
   var track = integration.track
