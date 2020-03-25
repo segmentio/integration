@@ -40,10 +40,11 @@ function createIntegration (name) {
    * @api public
    */
 
-  function Integration (settings) {
-    if (!(this instanceof Integration)) return new Integration(settings)
+  function Integration (settings, flags) {
+    if (!(this instanceof Integration)) return new Integration(settings, flags)
     this.debug = debug('segmentio:integration:' + this.slug())
     this.settings = settings || {}
+    this.flags = flags
     Emitter.call(this)
     this.initialize()
     wrapMethods(this)
