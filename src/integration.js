@@ -44,7 +44,7 @@ function createIntegration (name) {
     if (!(this instanceof Integration)) return new Integration(settings, flags)
     this.debug = debug('segmentio:integration:' + this.slug())
     this.settings = settings || {}
-    this.flags = flags
+    this.flags = flags || new Set()
     Emitter.call(this)
     this.initialize()
     wrapMethods(this)
