@@ -1,3 +1,8 @@
+7.0.0 / 2020-03-31
+==================
+
+  * Support usage of the facade in server-side batch integrations
+
 6.0.0 / 2019-06-09
 ==================
 
