@@ -62,7 +62,7 @@ module.exports = function (integration) {
           if (mapper[method]) {
             return mapper[method].call(this, ev, this.settings)
           } else {
-            return ev.obj
+            return ev
           }
         })
 
