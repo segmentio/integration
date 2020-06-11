@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 
+const { AsyncResource } = require('async_hooks')
 var ResourceLockedError = require('./errors').ResourceLockedError
 var ValidationError = require('./errors').Validation
 var normalize = require('to-no-case')
@@ -242,6 +243,24 @@ exports.request = function (method, path) {
     return fn(err, res)
   }
 
+  // Captures the current async context by creating an async resource for the
+  // superagent request.
+  //
+  // This is necessary because async_hooks does not follow "Thenable" types,
+  // depsite promises being compatible with them. The "then" method is invoked
+  // asynchronously on a "nextTick", where the async context that originally
+  // created the "Thenable" object has been lost.
+  //
+  // By creating the async resource here and overriding the "then" method, we
+  // bind the request object to the async execution context, and can restore
+  // it via a call to runInAsyncScope in the overriden "then" function.
+  const asyncResource = new AsyncResource('com.segment.integration.Request')
+  const thenFunction = Reflect.get(req, 'then')
+  const thenAsyncHook = function then (resolve, reject) {
+    return asyncResource.runInAsyncScope(thenFunction, this, resolve, reject)
+  }
+
+  req.then = thenAsyncHook
   return req
 }
 

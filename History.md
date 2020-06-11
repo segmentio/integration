@@ -1,3 +1,8 @@
+7.1.0 / 2020-03-31
+==================
+
+  * Make integration requests compatible with async_hooks by creating an AsyncResource for each request
+
 7.0.0 / 2020-03-31
 ==================
 
