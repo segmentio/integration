@@ -12,6 +12,16 @@ var proto = require('./proto')
 var assert = require('assert')
 var debug = require('debug')
 
+class Flags {
+  constructor(flagArray = []) {
+    this.flagSet = new Set(flagArray)
+  }
+
+  on(flag) {
+    return this.flagSet.has(flag)
+  }
+}
+
 /**
  * Expose `createIntegration`
  */
@@ -23,6 +33,7 @@ exports = module.exports = createIntegration
  */
 
 exports.errors = errors
+exports.Flags = Flags
 
 /**
  * Create integration with `name`.
@@ -40,10 +51,11 @@ function createIntegration (name) {
    * @api public
    */
 
-  function Integration (settings) {
-    if (!(this instanceof Integration)) return new Integration(settings)
+  function Integration (settings, flags) {
+    if (!(this instanceof Integration)) return new Integration(settings, flags)
     this.debug = debug('segmentio:integration:' + this.slug())
     this.settings = settings || {}
+    this.flags = flags || new Flags()
     Emitter.call(this)
     this.initialize()
     wrapMethods(this)
