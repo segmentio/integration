@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 
+const { AsyncResource } = require('async_hooks')
 var ResourceLockedError = require('./errors').ResourceLockedError
 var ValidationError = require('./errors').Validation
 var normalize = require('to-no-case')
