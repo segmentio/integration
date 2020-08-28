@@ -149,7 +149,7 @@ exports.lock = async function (key, timeout, fn) {
   key = [name, key].join(':')
 
   try {
-    const ok = await this.redis().setAsync(key, 1, 'NX', 'PX', timeout)
+    const ok = await this.redis().set(key, 1, 'NX', 'PX', timeout)
     if (!ok) return fn(new ResourceLockedError(fmt('key `%s` is locked', key), name))
     return fn()
   } catch (e) {
@@ -174,7 +174,7 @@ exports.unlock = async function (key, fn) {
   key = [this.name, key].join(':')
 
   try {
-    await this.redis().delAsync(key)
+    await this.redis().del(key)
     this.locked = false
     return fn()
   } catch (e) {

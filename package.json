@@ -29,9 +29,8 @@
     "to-no-case": "^1.0.2"
   },
   "devDependencies": {
-    "bluebird": "^3.5.5",
+    "ioredis": "^4.17.3",
     "mocha": "^3.4.2",
-    "redis": "^2.7.1",
     "segmentio-facade": "segmentio/facade#3.2.6"
   }
 }

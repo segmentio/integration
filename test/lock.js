@@ -2,7 +2,7 @@
 var track = require('./support').track
 var integration = require('..')
 var assert = require('assert')
-var redis = require('redis')
+var Redis = require('ioredis')
 var Batch = require('batch')
 
 describe('lock', function () {
@@ -11,7 +11,7 @@ describe('lock', function () {
   var msgs
 
   beforeEach(function (done) {
-    db = redis.createClient()
+    db = new Redis()
     db.on('error', done)
     db.on('ready', done)
   })

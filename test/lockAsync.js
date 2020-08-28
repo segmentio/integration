@@ -1,11 +1,7 @@
-
 var track = require('./support').track
-var { promisifyAll } = require('bluebird')
 var integration = require('..')
 var assert = require('assert')
-var redis = require('redis')
-promisifyAll(redis.RedisClient.prototype)
-promisifyAll(redis.Multi.prototype)
+var Redis = require('ioredis')
 
 describe('lockAsync', function () {
   var segment
@@ -13,7 +9,7 @@ describe('lockAsync', function () {
   var msgs
 
   beforeEach(function () {
-    db = redis.createClient()
+    db = new Redis()
   })
 
   beforeEach(function () {
@@ -24,7 +20,7 @@ describe('lockAsync', function () {
   })
 
   afterEach(async function () {
-    await db.delAsync('users')
+    await db.del('users')
   })
 
   beforeEach(function () {
@@ -42,7 +38,7 @@ describe('lockAsync', function () {
     await segment.lock('some-key')
 
     try {
-      const exists = await db.existsAsync('Segment.io:some-key')
+      const exists = await db.exists('Segment.io:some-key')
       if (!exists) throw new Error('expected key to exist')
     } catch (e) {
       throw e
@@ -62,7 +58,7 @@ describe('lockAsync', function () {
 
       await Promise.all(promises)
 
-      const users = await db.hgetallAsync('users')
+      const users = await db.hgetall('users')
 
       assert.deepEqual(users, { 1: 'f', 2: 'e' })
     })
@@ -82,7 +78,7 @@ describe('lockAsync', function () {
         }
       }
 
-      const users = await db.hgetallAsync('users')
+      const users = await db.hgetall('users')
       assert.deepEqual(users, { 1: 'a', 2: 'e' })
     })
   })
@@ -101,15 +97,15 @@ describe('lockAsync', function () {
         }
       }
 
-      const users = await db.hgetallAsync('users')
+      const users = await db.hgetall('users')
       assert.deepEqual(users, { 1: 'a', 2: 'e' })
     })
   })
 
   async function withoutLock (msg) {
-    const users = await db.hgetAsync('users', msg.userId())
+    const users = await db.hget('users', msg.userId())
     if (!users) {
-      await db.hsetAsync('users', msg.userId(), msg.event())
+      await db.hset('users', msg.userId(), msg.event())
     }
   }
 
@@ -117,9 +113,9 @@ describe('lockAsync', function () {
     await this.lock(msg.userId())
 
     try {
-      const users = await db.hgetAsync('users', msg.userId())
+      const users = await db.hget('users', msg.userId())
       if (!users) {
-        await db.hsetAsync('users', msg.userId(), msg.event())
+        await db.hset('users', msg.userId(), msg.event())
       }
     } catch (e) {
       throw e
@@ -132,9 +128,9 @@ describe('lockAsync', function () {
     await this.lock(msg.userId(), 30000)
 
     try {
-      const users = await db.hgetAsync('users', msg.userId())
+      const users = await db.hget('users', msg.userId())
       if (!users) {
-        await db.hsetAsync('users', msg.userId(), msg.event())
+        await db.hset('users', msg.userId(), msg.event())
       }
     } catch (e) {
       throw e
