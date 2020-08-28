@@ -93,13 +93,13 @@ describe('validations', function () {
     })
   })
 
-  describe('fn(msg, settings)', function () {
+  describe('fn(msg, settings, features)', function () {
     var args
     var ctx
 
     beforeEach(function () {
       args = []
-      Segment.ensure(function (msg, settings) {
+      Segment.ensure(function (msg, settings, features) {
         ctx = this
         args.push(arguments)
       })
@@ -108,9 +108,11 @@ describe('validations', function () {
     it('should call fn with msg, settings', function () {
       var msg = new Track({})
       var settings = {}
-      Segment.validate(msg, settings)
+      var features = ['new_setting']
+      Segment.validate(msg, settings, features)
       assert.equal(args[0][0], msg)
       assert.equal(args[0][1], settings)
+      assert.equal(args[0][2], features)
     })
 
     it('should call fn with Integration context', function () {

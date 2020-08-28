@@ -13,7 +13,7 @@ export interface IntegrationStatic<Settings extends object, Options extends obje
    * Creates a new integration.
    * @param settings The integration settings
    */
-  new (settings: Settings): Integration<Settings, Options>
+  new (settings: Settings, features: string[]): Integration<Settings, Options>
 
   /**
    * Ensure the event contains a specific property value.
@@ -93,6 +93,7 @@ export interface IntegrationStatic<Settings extends object, Options extends obje
 export interface Integration<Settings extends object, Options extends object> {
   name: string
   settings: Settings
+  features: string[]
 
   /**
    * Initialize is called when the integration class is instantiated.

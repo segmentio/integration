@@ -122,12 +122,12 @@ exports.ensure = function (path, meta) {
  * @api public
  */
 
-exports.validate = function (msg, settings) {
+exports.validate = function (msg, settings, features) {
   var all = Object.keys(this.validations)
 
   for (var i = 0, err, fn; i < all.length; ++i) {
     fn = this.validations[i].validate
-    err = fn.call(this, msg, settings)
+    err = fn.call(this, msg, settings, features)
     if (err) return err
   }
 }

@@ -378,6 +378,19 @@ exports.retry = function (err) {
 }
 
 /**
+ * Determine if a feature flag is enabled in the set of features
+ * for this integration.
+ *
+ * @param {String} name Name of the feature flag
+ * @return {Boolean}
+ * @api public
+ */
+
+exports.featureOn = function (name) {
+  return this.features.includes(name)
+}
+
+/**
  * Add methods
  */
 
