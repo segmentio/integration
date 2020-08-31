@@ -44,7 +44,11 @@ function createIntegration (name) {
     if (!(this instanceof Integration)) return new Integration(settings, features)
     this.debug = debug('segmentio:integration:' + this.slug())
     this.settings = settings || {}
-    this.features = features || []
+    // Index the features for friendlier reads (e.g.; this.features.my_flag)
+    this.features = (features || []).reduce((map, flag) =>  {
+      map[flag] = true
+      return map
+    }, {})
     Emitter.call(this)
     this.initialize()
     wrapMethods(this)

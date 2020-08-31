@@ -93,7 +93,7 @@ export interface IntegrationStatic<Settings extends object, Options extends obje
 export interface Integration<Settings extends object, Options extends object> {
   name: string
   settings: Settings
-  features: string[]
+  features: Record<string, string>
 
   /**
    * Initialize is called when the integration class is instantiated.

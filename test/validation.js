@@ -108,7 +108,7 @@ describe('validations', function () {
     it('should call fn with msg, settings', function () {
       var msg = new Track({})
       var settings = {}
-      var features = ['new_setting']
+      var features = { new_setting: true }
       Segment.validate(msg, settings, features)
       assert.equal(args[0][0], msg)
       assert.equal(args[0][1], settings)
