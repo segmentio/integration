@@ -2,7 +2,7 @@
 ==================
 
   * Support feature flags in event handlers and validation functions. The `Integration` initializer now accepts an array of strings as its second parameter, named `features`.
-    Each item in the array represents **enabled** feature flag for the message in context. For ease of use, the array is converted into an object and can be accessed
+    Each item in the array represents an **enabled** feature flag for the message in context. For ease of use, the array is converted into an object and can be accessed
     like so during validation and event handling:
     ```
       // Validation
