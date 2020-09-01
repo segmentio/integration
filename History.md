@@ -1,3 +1,30 @@
+7.2.0 / 2020-09-01
+==================
+
+  * Support feature flags in event handlers and validation functions. The `Integration` initializer now accepts an array of strings as its second parameter, named `features`.
+    Each item in the array represents **enabled** feature flag for the message in context. For ease of use, the array is converted into an object and can be accessed
+    like so during validation and event handling:
+    ```
+      // Validation
+      const Webhooks = Integration('Webhooks)
+        .ensure(function (message, settings, features) {
+          if (features.validate_xyz) {
+            // Validate setting
+          }
+        })
+
+      // Event handlers
+      Webhooks.prototype.track = async function (message) {
+          if (this.features.attempt_header) {
+              req.set('X-Segment-Attempts', '101')
+          }
+      }
+
+      // Passing features
+      const features = ['validate_xyz', 'attempt_header']
+      const instance = new Webhooks(settings, features)
+    ```
+
 7.1.0 / 2020-03-31
 ==================
 
