@@ -40,7 +40,7 @@ function createIntegration (name) {
    * @api public
    */
 
-  function Integration (settings, features) {
+  function Integration (settings, features = []) {
     if (!(this instanceof Integration)) return new Integration(settings, features)
     this.debug = debug('segmentio:integration:' + this.slug())
     this.settings = settings || {}
