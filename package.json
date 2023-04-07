@@ -19,7 +19,7 @@
   "homepage": "https://github.com/segmentio/integration#readme",
   "dependencies": {
     "@types/node": "^12.0.8",
-    "analytics-events": "^2.2.0",
+    "analytics-events": "^2.2.5",
     "batch": "^0.6.1",
     "debug": "^2.6.8",
     "lodash": "^4.17.4",
