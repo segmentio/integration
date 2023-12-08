@@ -2,6 +2,9 @@
 
 [![Circle CI](https://circleci.com/gh/segmentio/integration.svg?style=svg&circle-token=44d2f32e739758cfa078893341f88d5f744e1757)](https://circleci.com/gh/segmentio/integration)
 
+> [!NOTE]
+> Segment has paused maintenance on this project, but may return it to an active status in the future. Issues and pull requests from external contributors are not being considered, although internal contributions may appear from time to time. The project remains available under its open source license for anyone to use.
+
 Segment integration base prototype.
   
 ## Integrating with Segment
